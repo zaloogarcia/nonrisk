@@ -1,0 +1,167 @@
+{% extends 'navbar.html' %}
+{% block content %}
+{% load static %}
+<form method='POST' action='{% url 'pacient_add'%}'>
+  {% csrf_token %}
+  
+  <div class="container-list">
+    <div style='padding:10px;'> <h4>Nuevo Paciente </h4></div>
+    <div>
+      <label for='inputName' >Nombre Completo:</label>
+      <input id='inputName' name='name' type="text" placeholder="Nombre"required='' >
+      
+      <input id='inputSecondName' name='name_second'type="text" placeholder="Segundo Nombre">
+      
+      <input id='inputLastName' name='name_last' type="text" placeholder="Apellido" required=''>
+
+      <input style='width: 150px;' name='id' id='id_input' type="int" placeholder="DNI" required=''>
+    </div>
+    <div>
+      
+      <select id='id_sex' name="sex" required=''>
+        <option value='' selected=''> Sexo </option>
+        <option value='M'> Masculino </option>
+        <option value='F'> Femenino </option>
+      </select>
+
+      <input id='inputAddress' name='address' type="text" placeholder="Direccion" required=''>
+
+      <input id='inputPhone' name='phone' type="tel" placeholder="Telefono" required=''>
+      
+      <label for='inputName' >Fecha de Nacimiento:</label>
+      <input id='inputBirthDate' name='date_of_birth' type="date" placeholder="Fecha de Nacimiento" required=''>
+    </div>
+   
+    <div style='width:300px'>
+      <label for='inputSmoke' style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding: 6px;' >Fumador:</label>
+      <input id='inputSmoke' name='smoke' type="checkbox">
+    <!-- hacer que se despliege -->
+
+      <input style='width: 150px' id='inputSmokeQuantity' type="int" placeholder="Cantidad" name='smoke_quantity'>
+
+      <label for='inputSmokeDuration' style='margin: 5px;' >Duracion:</label>
+      <input id='inputSmokeDuration' type="date" name='smoke_duration'>
+
+      <label for='inputSmokeQuit' style='margin: 5px;'> Finalizacion: </label>
+      <input id='inputSmokeQuit' type="date" placeholder="Fecha de Nacimiento" name='smoke_quit'>
+    </div>
+    <!--  -->
+
+    <div style='width:300px'>
+      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputHyper' >HiperTenso:</label>
+      <input id='inputHyper' type="checkbox" name='hyper'>
+    <!-- Despliege -->
+      <select id='inputHyerType' name="hyper_type">
+        <option value='' selected=''> Tipo </option>
+        <option value='Primaria'> Primaria  </option>
+        <option value='Secundaria'> Secundaria </option>
+      </select>
+      <label for='inputHyperDate' style='margin: 5px;' >Fecha de Inicio:</label>
+      <input id='inputHyperDate' type="date" name='hyper_date'>
+    <!--  -->
+    </div>
+
+    <div style='width:300px'>
+      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputDislipidemia' >Dislipidemia:</label>
+      <input id='inputDislipidemia' name='displidemia' type="checkbox">
+    <!-- Despliege -->
+      <select id='inputDislipidemiaType' name="dislipidemia_type">
+        <option value='' selected=''> Tipo </option>
+        <option value='I'> I  </option>
+        <option value='IIa'> IIa </option>
+        <option value='IIb'> IIb </option>
+        <option value='III'> III </option>
+        <option value='IV'> IV </option>
+        <option value='V'> V </option>
+      </select>
+
+      <label for='inputDislipidemiaDate' style='margin: 5px;' >Fecha de Inicio:</label>
+      <input id='inputDislipidemiaDate' name='dispilidemia_date' type="date">
+    <!--  -->
+    </div>
+    
+    <div style='width:300px'>
+      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputIRC' >IRC:</label>
+      <input id='inputIRC' name='irc' type="checkbox">
+    <!-- Despliege -->
+      <select id='inputIRCType' name="irc_type">
+        <option value='' selected=''> Tipo </option>
+        <option value='G1'> G1  </option>
+        <option value='G2'> G2 </option>
+        <option value='G3a'> G3a </option>
+        <option value='G3b'> G3b </option>
+        <option value='G4'> G4 </option>
+        <option value='G5'> G5 </option>
+      </select>
+      <div>
+      <label for='inputIRCDate' style='margin: 5px;' >Fecha de Inicio:</label>
+      <input id='inputIRCDate' type="date" name='irc_date'>
+      </div>
+      </div>
+    
+    <div style='width:300px;'>
+      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputDiabetes' >Diabetes:</label>
+      <input id='inputDiabetes' type="checkbox" name='diabetes'>
+    <!-- Desplegar -->
+      <select id='diabetesType' name="diabetes_type">
+        <option value='' selected=''> Tipo </option>
+        <option value='1'> 1  </option>
+        <option value='2'> 2 </option>
+        <option value='3'> 3 </option>
+        <option value='4'> 4 </option>
+        <option value='5'> 5 </option>
+      </select>
+
+      <label for='inputDiabetesDate' style='margin: 5px;' >Fecha de Inicio:</label>
+      <input id='inputDiabetesDate' type="date" name='diabetes_date'>
+    </div>
+    <!--  -->
+
+    <div style='width:300px'>
+      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputIAM'>Antecedentes IAM:</label>
+      <input id='inputIAM' type="checkbox" name='iam'>
+
+      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputACV'>Antecedentes ACV:</label>
+      <input id='inputACV' type="checkbox" name='acv'>
+    </div>
+    
+    <div style='width:300px'>
+      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputRevasc'>Antecedentes Revasc:</label>
+      <input id='inputRevasc' type="checkbox" name='revasc'> 
+
+      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputEnfvp'>Antecedentes Enf VP:</label>
+      <input id='inputEnfvp' type="checkbox" name='enfvp'>
+    </div>
+    
+    <div style='width:300px'>
+      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputAcv_ait'>Antecedentes ACV-AIT:</label>
+      <input id='inputAcv_ait' type="checkbox" name='acv_ait'>
+
+      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputFecvt'>Antecedentes FECVT:</label>
+      <input id='inputFecvt' type="checkbox" name='fecvt'>
+
+
+    </div>
+
+    <input style='width:100%;' id='inputMedicalDetails' type="text" placeholder="Detalles medicos" name='medical_details'>
+    
+    <div style='width:100%; text-align: center;'>
+    <button type="submit">Save</button>
+    </div>
+
+  </div>
+</form>
+
+
+{% endblock %}
+
+
+<!--       <input style='width:70px' id='inputDiabetesType' type="int" placeholder="Tipo">
+
+      <input style='width:120px' id='inputDiabetesCHOLLevel' type="int" placeholder="Nivel de CHOL">
+
+      <input style='width:110px' id='inputDiabetesHDLLevel' type="int" placeholder="Nivel de HDL">
+
+      <input style='width:110px' id='inputDiabetesLDLLevel' type="int" placeholder="Nivel de LDL">
+
+      <input style='width:110px' id='inputDiabetesTRILevel' type="int" placeholder="Nivel de TRI"> -->

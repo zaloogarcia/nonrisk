@@ -4,14 +4,14 @@ import datetime
 from django.contrib.auth.models import User
 
 class Pacient(models.Model):
-    id = models.AutoField(primary_key=True)
+    id = models.IntegerField(primary_key=True) #DNI
 
     MALE = 'M'
     FEMALE = 'F'
     SEX_OPTIONS = ((MALE, 'Male'), (FEMALE, 'Female'))
 
     name = models.CharField(max_length=50, null=False, blank=False)
-    name_second = models.CharField(max_length=50, null=False, blank=True)
+    name_second = models.CharField(max_length=50, null=True, blank=True)
     name_last = models.CharField(max_length=50, null=False, blank=False)
     sex = models.CharField(max_length=1, choices=SEX_OPTIONS)
     address = models.CharField(max_length=175, null=False, blank=False)
@@ -20,49 +20,79 @@ class Pacient(models.Model):
     medical_details = models.CharField(max_length=300)
 
     smoke = models.BooleanField()
-    smoke_quantity = models.IntegerField(blank=True)
-    smoke_duration = models.DateField(blank=True)
-    smoke_quit = models.DateField(blank=True)
+    smoke_quantity = models.IntegerField(null=True, blank=True)
+    smoke_duration = models.DateField(null=True, blank=True)
+    smoke_quit = models.DateField(null=True, blank=True)
 
     diabetes = models.BooleanField()
-    diabetes_type = models.IntegerField(blank=True)
-    diabetes_chol_level = models.IntegerField(blank=True) #Chol Level
-    diabetes_hdl_level = models.IntegerField(blank=True)  #TRI Level
-    diabetes_ldl_level = models.IntegerField(blank=True)  #HDL Level
-    diabetes_tri_level = models.IntegerField(blank=True)  #LDL Level
+    diabetes_type = models.IntegerField(null=True, blank=True)
+    diabetes_date = models.DateField(null=True, blank=True)
+
+    PRIMARY = 'Primaria'
+    SECONDARY = 'Secundaria'
+    HYPER_OPTIONS = ((PRIMARY, 'Primaria'),(SECONDARY, 'Secundaria'))
+    hyper = models.BooleanField()
+    hyper_type = models.CharField(null=True, max_length=10,choices=HYPER_OPTIONS, blank=True)
+    hyper_date = models.DateField(null=True, blank=True)
+
+    I = 'I'
+    IIA = 'IIa'
+    IIB = 'IIb'
+    III = 'III'
+    IV = 'IV'
+    V = 'V'
+    DISLIPIDEMIA_OPTIONS = ((I,'I'),(IIA, 'IIa'),(IIB,'IIb'),(III,'III'),
+        (IV, 'IV'),(V,'V'))
+    dislipidemia = models.BooleanField()
+    dislipidemia_type = models.CharField(null=True, max_length=10,
+                                         choices=DISLIPIDEMIA_OPTIONS, blank=True)
+    dislipidemia_date = models.DateField(null=True, blank=True)
+    
+    G1 ='G1'
+    G2 ='G2'
+    G3A='G3a'
+    G3B='G3b'
+    G4 ='G4'
+    G5 ='G5'
+    IRC_OPTIONS = ((G1,'G1'),(G2,'G2'),(G3A,'G3a'),(G3B,'G3b'),(G4,'G4'),(G5,'G5'))
+    irc = models.BooleanField()
+    irc_type = models.CharField(null=True,blank=True, choices=IRC_OPTIONS, max_length=3)
+
+    iam = models.BooleanField()
+    acv = models.BooleanField()
+    revasc = models.BooleanField()
+    enfvp = models.BooleanField()
+    acv_ait= models.BooleanField()
+    fecvt = models.BooleanField()
 
     def __str__(self):
         return self.name
 
 class Studies(models.Model):
     pacient = models.ForeignKey(Pacient, on_delete=models.CASCADE)
-
+    id = models.AutoField(primary_key=True)
     date = models.DateField()
-    SYMPTOMATIC = 'SYM'
-    ASYMPTOMATIC = 'ASY'
-    TERRITORY_OPTIONS = ((SYMPTOMATIC, 'Symptomatic'),
-     (ASYMPTOMATIC, 'ASYMPTOMATIC'))
 
-    territory = models.CharField(max_length=3, choices=TERRITORY_OPTIONS)
+    weight = models.IntegerField() #in kg
+    height  = models.IntegerField() #in cm
+    tas = models.IntegerField()
+    tad = models.IntegerField()
+    pulse = models.IntegerField()
 
-    carotid_1 = models.BooleanField()  # Unilateral motor and sensory deficit
-    carotid_2 = models.BooleanField()  # Tinlgin or numbness on one side
-    carotid_3 = models.BooleanField()  # Aphasia
-    carotid_4 = models.BooleanField()  # Monocular disturbances (Amarosis fugax)
+    diabetes_chol_level = models.IntegerField(null=True,blank=True) #Chol Level
+    diabetes_hdl_level = models.IntegerField(null=True,blank=True)  #TRI Level
+    diabetes_ldl_level = models.IntegerField(null=True,blank=True)  #HDL Level
+    diabetes_tri_level = models.IntegerField(null=True,blank=True)  #LDL Level
+    
+    glucemia  = models.IntegerField()
+    hba1c = models.IntegerField()
+    ac_uric = models.IntegerField()
+    creat = models.IntegerField()
+    tsh = models.IntegerField()
+    pcr = models.IntegerField()
 
-    vertebrobasilar_1 = models.BooleanField()  # Bilateral motor and sensory deficits
-    vertebrobasilar_2 = models.BooleanField()  # Vertigo(a pinning sensation)
-    vertebrobasilar_3 = models.BooleanField()  # Ataxia (Unsteadiness)
-    vertebrobasilar_4 = models.BooleanField()  # Binocular visual field defects
-    vertebrobasilar_5 = models.BooleanField()  # Drop attacks
-    vertebrobasilar_6 = models.BooleanField()  # Diplopia
-
-    nonspecific_1 = models.BooleanField() # Light-headedness
-    nonspecific_2 = models.BooleanField() # Syncope
-    nonspecific_3 = models.BooleanField() # Headache
-    nonspecific_4 = models.BooleanField() # Confusion
-
-    comments = models.CharField(max_length=300, null=False, blank=False)
+    comments = models.CharField(max_length=300, null=True, blank=True)
 
     def __str__(self):
-        return self.date
+        name = str(self.id)
+        return name

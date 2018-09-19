@@ -1,0 +1,78 @@
+{% extends 'navbar.html' %}
+{% block content %}
+{% load static %}
+<form method='POST' action='{% url 'study_edit' pacient.id study.id %}'>
+  {% csrf_token %}
+  
+  <div class="container-list">
+      <br>
+      <div style='text-align: center;'>
+        <label for='inputName' >Fecha:</label>
+        <input id='inputName' name='date' type="date" required=''>
+      </div>
+    <div class='box-container'>
+      <div class='box-grid'>
+        
+        <label for='peso'>Peso: </label>
+        <input id='peso'name='weight'type="int" placeholder="{{study.weight}} kg">
+        
+        <label for='Altura'>Altura: </label>
+        <input name='height' type="int" placeholder="{{study.height}}(cm)" required=''>
+        
+        <label for='tas'>TAS: </label>
+        <input name='tas'  type="int" placeholder="{{study.tas}} (mmHg)" required=''>
+        
+        <label for='tad'>TAD: </label>      
+        <input name='tad'  type="int" placeholder="{{study.tad}} (mmHg)" required=''>
+        
+        <label for='pulse'>Pulso: </label>
+        <input name='pulse' type="int" placeholder="{{study.pulse}} (lpm)" required=''>
+      </div>
+      <div class='box-grid'>
+       
+        <label for='diabetes_chol_level'>Col Total: </label>
+        <input name='diabetes_chol_level' type="int" placeholder="{{diabetes_chol_level}}(mg/dl)">
+        
+        <label for='diabetes_hdl_level'>HDL: </label>
+        <input name='diabetes_hdl_level' type="int" placeholder="{{study.diabetes_hdl_level}} (mg/dl)">
+        
+        <label for='diabetes_ldl_level'>LDL: </label>
+        <input name='diabetes_ldl_level' type="int" placeholder="{{study.diabetes_ldl_level}} (mg/dl)">
+        
+        <label for='diabetes_tri_level'>Triglic: </label>
+        <input name='diabetes_tri_level' type="int" placeholder="{{study.diabetes_tri_level}}(mg/dl)">
+        
+        <label for='glucemia'>Glucemia (mg/dl): </label>
+        <input name='glucemia' type="int" placeholder="Glucemia (mg/dl)">
+      </div>
+      
+      <div class='box-grid'>
+      
+        <label for='hba1c'>HbA1c: </label>
+        <input name='hba1c' type="int" placeholder="{{study.hba1c}} (%)" required=''>
+
+        <label for='ac_uric'>Acido Urico: </label>
+        <input name='ac_uric'  type="int" placeholder="{{study.ac_uric}} (mg/dl)" required=''>
+       
+        <label for='creat'>Creat: </label>
+        <input name='creat'  type="int" placeholder="{{study.creat}} (mg/dl)" required=''>
+
+        <label for='peso'>TSH: </label>
+        <input name='tsh'  type="int" placeholder="{{study.tsh}} (mIu/L)" required=''>
+
+        <label for='pcr'>PCR u: </label>
+        <input name='pcr'  type="int" placeholder="{{study.pcr}} (ng/ml)" required=''>
+
+      </div>
+      <br>
+    </div>
+        <input name='comments' style='width: 100%;' type="text" placeholder="Comentarios">
+
+
+    <div style='width:100%; text-align: center;'>
+    <button type="submit">Guardar</button>
+  </div>
+</form>
+
+
+{% endblock %}

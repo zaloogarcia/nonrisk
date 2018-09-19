@@ -1,0 +1,60 @@
+{% extends 'navbar.html' %}
+{% block content %}
+{% load static %}
+<form method='POST' action='{% url 'study_add' pacient.id %}'>
+  {% csrf_token %}
+  
+  <div class="container-list">
+    <div>
+      <br>
+      <div style='text-align: center;'>
+        <label for='inputName' >Fecha:</label>
+        <input id='inputName' name='date' type="date" required=''>
+      </div>
+      <div class='box-33-study'>
+        <input name='weight'type="int" placeholder=" Peso(kg) ">
+        <input name='height' type="int" placeholder=" Altura(cm)" required=''>
+        <input name='tas'  type="int" placeholder="TAS (mmHg)" required=''>
+        <input name='tad'  type="int" placeholder="TAD (mmHg)" required=''>
+        <input name='pulse' type="int" placeholder="Pulso (lpm)" required=''>
+      </div>
+     
+      <div class='box-33-study'>
+       
+        <input name='diabetes_chol_level' type="int" placeholder="Col Total (mg/dl)">
+        <input name='diabetes_hdl_level' type="int" placeholder="HLD (mg/dl)">
+        <input name='diabetes_ldl_level' type="int" placeholder="LDL (mg/dl)">
+        <input name='diabetes_tri_level' type="int" placeholder="Triglic(mg/dl)">
+        <input name='glucemia' type="int" placeholder="GLucemia (mg/dl)">
+      </div>
+      
+      <div class='box-33-study'>
+
+        <input name='hba1c' type="int" placeholder="HbA1c (%)" required=''>
+        <input name='ac_uric'  type="int" placeholder="Acido Urico (mg/dl)" required=''>
+        <input name='creat'  type="int" placeholder="Creat (mg/dl)" required=''>
+        <input name='tsh'  type="int" placeholder="TSH (mIu/L)" required=''>
+        <input name='pcr'  type="int" placeholder="PCR u (ng/ml)" required=''>
+
+      </div>
+      <br>
+        <input name='comments' style='width: 100%;' type="text" placeholder="Comentarios">
+
+    <div style='width:100%; text-align: center;'>
+
+      <canvas id="myCanvas" width="700" height="500" style="border:1.5px solid #000000;"></canvas>
+
+      <input type="range" id="myRange" name="amountRange" value="1" min="1" max="50" oninput="this.form.amountInput.value=this.value" onclick="lineWidthRange()">
+      <button class="button" onclick="erase()">CLEAR</button>
+      <script type="text/javascript" src="/static/js/script.js"></script>
+    </div>
+
+    <div style='width:100%; text-align: center;'>
+    <input name='Done' type="checkbox" required=''>
+    <button type="submit">Guardar</button>
+    </div>
+  </div>
+</form>
+
+
+{% endblock %}

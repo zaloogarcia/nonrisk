@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Estudios de {{pacient.name}}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->  
+    <link rel="icon" type="image/png" href="/static/images/icons/favicon.ico"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/fonts/iconic/css/material-design-iconic-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/vendor/animate/animate.css">
+    <!--===============================================================================================-->  
+    <link rel="stylesheet" type="text/css" href="/static/vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/vendor/animsition/css/animsition.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/vendor/select2/select2.min.css">
+    <!--===============================================================================================-->  
+    <link rel="stylesheet" type="text/css" href="/static/vendor/daterangepicker/daterangepicker.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="/static/css/util.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+    <!--===============================================================================================-->
+</head>
+<body>
+  <div class="limiter">
+    <div class="wrap-navbar">
+      <div class='hover-edit'>
+        <a href='/'>Home</a>
+      </div>
+      <div class='hover-logout'>
+        <a href='accounts/logout'  style="float: right;">Log out</a>
+        <a href='{% url 'study_add' pacient.id%}'>Agregar Estudio</a>
+      </div>
+      <div class='hover-edit'>
+        <a href="{% url 'study_edit' pacient.id study.id %}">
+        Editar Estudio
+        </a>
+      </div>
+      <div class='hover-delete'>
+        <a href="/pacient/{{pacient.id}}/{{study.id}}/delete">Eliminar Estudio</a>
+      </div>
+      <form  action="action_page.php" style="float: right;">
+        <input type="int" placeholder="Search.." name="search">
+        <button type="submit"><i class="fa fa-search"></i></button>
+      </form> 
+  </div>
+</div>
+{% block content %}
+{% endblock %}
+</body>
+
+</html>

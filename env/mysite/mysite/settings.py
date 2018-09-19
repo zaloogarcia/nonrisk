@@ -118,6 +118,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
+STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, 'nonrisk/static-assets'),
+)
+
 STATIC_URL = '/static/'
-LOGIN_REDIRECT_URL = '/nonrisk/pacientes'
-LOGOUT_REDIRECT_URL = 'home'
+STATIC_ROOT =  "nonrisk/static"
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
