@@ -1,25 +1,18 @@
-//Create canvas
 var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
+var imageObj = new Image();
+var final_image;
 
-//Set background
-ctx.fillStyle = "white";
-ctx.fillRect(0, 0, 700, 500);
+imageObj.onload = start;
+imageObj.src = '/static/images/arterias.jpg';
 
-//Lines is default
-lines();
-
-var removeRectangleInLine = 0;
+function start() {
+  ctx.drawImage(imageObj, 0, 0, myCanvas.width, myCanvas.height);
+  canvas.onmousemove = lines();
+  // document.getElementById("image_data").value = canvas.toDataURL("image/png", 1);
+};
 
 function lines() {
-    //painting = false;
-    //Remove event listeners so line won't draw rectangle
-    if (removeRectangleInLine == 1) {
-        canvas.removeEventListener('mousedown', rectMouseDown);
-        canvas.removeEventListener('mouseup', rectMouseUp);
-        canvas.removeEventListener('mousemove', rectMouseMove);
-        canvas.removeEventListener('mouseout', rectMouseout);
-    };
 
     //Initialize mouse coordinates to 0,0
     var mouse = { x: 0, y: 0};
@@ -29,8 +22,8 @@ function lines() {
         ctx.lineTo(mouse.x, mouse.y);
         ctx.lineWidth = lineWidthRange();
         ctx.lineJoin = 'round';
-        ctx.lineCap = brushstyle;
-        ctx.strokeStyle = colors;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = 'red';
         ctx.stroke();
     };
 
@@ -66,12 +59,6 @@ function lines() {
 
 };
 
-//Color palette
-var colors = "red";
-
-//Change brush style
-var brushstyle = "round";
-
 //Change line width
 function lineWidthRange() {
     var widthLine = document.getElementById("myRange").value;
@@ -81,15 +68,20 @@ function lineWidthRange() {
 //Clear canvas
 function erase() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(imageObj, 0, 0, myCanvas.width, myCanvas.height);
+
 };
 
-//Save image
-var button = document.getElementById('dwnld');
-button.addEventListener('click', function (e) {
-var dataURL = canvas.toDataURL('image/png');
-button.href = dataURL;
+function saveImage() {
+    final_image = canvas.toDataURL('image/png',1);
+    document.getElementById('image_data').value=final_image;
+//   var final_image = new Image();
+//   final_image.src = canvas.toDataURL('image/png', 1)
+ }
 
-});
+
+
+
 
 
 

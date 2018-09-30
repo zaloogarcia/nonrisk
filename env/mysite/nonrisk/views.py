@@ -1,21 +1,37 @@
-from nonrisk.models import *
+import re
+import base64
+import io
+from io import *
+from PIL import Image
+from django.http import *
 from nonrisk.forms import *
+from nonrisk.models import *
 from datetime import datetime
 from django.template import loader
-from django.shortcuts import render, redirect
-from django.http import *
+from reportlab.pdfgen import canvas
+from django.http import FileResponse
 from django.db import IntegrityError
 from django.views.generic import View
 from django.forms.models import model_to_dict
+from django.shortcuts import render, redirect
 from django.template.defaulttags import register
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_list_or_404, get_object_or_404
+from django.core.files.base import ContentFile
 
+# NEED TO INSTALL PILLOW
+# NEED TO INSTALL PDFKIT
+
+def RepresentsInt(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
 
 @register.filter
-def get_item(dictionary, key):
-    return dictionary.get(key)
+def get_item(dictionary, key): return dictionary.get(key)
 
 @login_required
 def pacients_view(request):
@@ -42,8 +58,42 @@ def pacients_view(request):
 
     context = {'pacients_list': pacients_list, 'ammount_studies': ammount_studies_dict,
      'last_studies_date': last_studies_date_dict}
-    print(last_studies_date_dict)
     return render(request,'pacients.html',context)
+
+def pacient_search(request):
+    print(request.method)
+    if request.method == 'POST':
+        data = request.POST.get('data')
+        print(data)
+        studies_list = Studies.objects.all()
+
+        ammount_studies = 0
+        ammount_studies_dict = {}
+        last_studies_date_dict = {}
+        last_studies_date = ''
+
+        if RepresentsInt(data): pacient_list = list(Pacient.objects.filter(id = data))
+        else:
+            pacient_list = list(Pacient.objects.filter(name__startswith= data))
+            pacient_list.extend(list(Pacient.objects.filter(name_last__startswith= data)))
+
+        for pacient in pacient_list:
+            ammount_studies = studies_list.filter(pacient_id = pacient.id).count()
+            if ammount_studies > 0:
+                last_studies_date = studies_list.filter(pacient_id= pacient.id).order_by('date').first()
+                last_studies_date = str(last_studies_date.date)
+            else:
+                ammount_studies = 0
+                last_studies_date = ''
+            last_studies_date_dict.update({pacient.id : last_studies_date})
+            ammount_studies_dict.update({pacient.id : ammount_studies})
+            last_studies_date = ''
+            ammount_studies = 0
+        context = {'pacient_list': pacient_list,'ammount_studies': ammount_studies_dict,
+            'last_studies_date': last_studies_date_dict}
+        print (context)
+        return render(request, 'pacient_search.html', context)
+
 
 def pacient_view(request,pacient_id): 
     try:
@@ -180,7 +230,21 @@ def study_view(request, pacient_id, studies_id):
 
 def study_add(request, pacient_id):
     pacient = Pacient.objects.filter(id=pacient_id).get()
+
     if request.method == 'POST':
+
+        #Patient photo
+        image_data = request.POST.get('image_data')
+        image_data = re.sub("^data:image/png;base64,", "", image_data)
+        image_data = base64.b64decode(image_data)
+        image_data = BytesIO(image_data)
+        im = Image.open(image_data)
+        filename = str(pacient) + str(request.POST.get('date')) + '.png'
+        tempfile = im
+        tempfile_io = BytesIO()
+        tempfile.save(tempfile_io, format=im.format)
+
+
         new_study = Studies.objects.create(
             pacient=pacient,
             date= request.POST.get('date'),
@@ -203,8 +267,9 @@ def study_add(request, pacient_id):
             tsh=request.POST.get('tsh'),
             pcr=request.POST.get('pcr'),
 
-            comments=None if request.POST.get('comments') == 'None' else request.POST.get('comments'),
+            comments= None if request.POST.get('comments') == '' else request.POST.get('comments'),
         )
+        new_study.photo.save(filename, ContentFile(tempfile_io.getvalue()) , save = True) #save the photo
         
         return redirect('study_view', pacient.id, new_study.id)
     else:
@@ -260,3 +325,24 @@ def study_delete(request, studies_id, pacient_id):
     studies = Studies.objects.filter(pacient=pacient_id)
     context = {'studies': studies}
     return redirect('pacient_view', pacient_id)
+
+def export_pdf(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="mypdf.pdf"'
+
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer)
+
+    # Start writing the PDF here
+    p.drawString(100, 100, 'Hello world.')
+    # End writing
+
+    p.showPage()
+    p.save()
+
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+
+    return response
+

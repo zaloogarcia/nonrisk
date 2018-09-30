@@ -13,57 +13,56 @@
   <label>Domicilio: </label> {{pacient.Address}}<br>
   <label>Telefono: </label> {{pacient.phone}}<br>
   <label>Nacimiento: </label> {{pacient.date_of_birth}}<br>
-  <label>Detalles medicos: </label> {{pacient.medical_details}}<br>
   <table style='padding:30px; font-size: smaller;'>
     <tr>
       <th style='padding:5px;'></th>
       <th style='padding:5px;'></th>
       <th style='padding:5px;'>Tipo</th>
       <th style='padding:5px;'>Inicio</th>
-      <th style='padding:5px;'>Finalización</th>
+      <th style='padding:5px;'>Final</th>
       <th style='padding:5px;'>Cantidad</th>
     </tr>
     <tr>
-      <td>Tabaquismo</td>
+      <td style="background: #4A97D4; color:white;">Tabaquismo</td>
       <td>{{pacient.smoke}}</tb>
       <td> </td>
-      <td>{{pacient.smoke_duration}}</tb>
-      <td>{{pacient.smoke_quit}}</tb>
+      <td>{{pacient.smoke_duration|date:"Y"}}</tb>
+      <td>{{pacient.smoke_quit|date:"Y"}}</tb>
       <td>{{pacient.smoke_quantity}}</td>
     </tr>
     <tr>
-      <td>Diabetes Mellitus</tb>
+      <td style="background: #4A97D4; color:white;">Diabetes Mellitus</tb>
       <td>{{pacient.diabetes}}</tb>
       <td>{{pacient.diabetes_type}}</tb>
-      <td>{{pacient.diebetes_date}}</tb>
+      <td>{{pacient.diebetes_date|date:"Y"}}</tb>
       <td></td>
       <td></td>
     <tr>
-      <td>Hipertension Arterial</td>
+      <td style="background: #4A97D4; color:white;">Hipertension Arterial</td>
       <td>{{pacient.hyper}}</td>
       <td>{{pacient.hyper_type}}</td>
-      <td>{{pacient.hyper_date}}</td>
+      <td>{{pacient.hyper_date|date:"Y"}}</td>
       <td></td>
       <td></td>
     </tr>
         <tr>
-      <td>Dislipidemia</td>
+      <td style="background: #4A97D4; color:white;">Dislipidemia</td>
       <td>{{pacient.dislipidemia}}</td>
       <td>{{pacient.dislipidemia_type}}</td>
-      <td>{{pacient.dislipidemia_date}}</td>
+      <td>{{pacient.dislipidemia_date|date:"Y"}}</td>
       <td></td>
       <td></td>
     </tr>
     <tr>
-      <td>IRC</td>
+      <td style="background: #4A97D4; color:white;">IRC</td>
       <td>{{pacient.irc}}</td>
       <td>{{pacient.irc_type}}</td>
-      <td>{{pacient.irc_date}}</td>
+      <td>{{pacient.irc_date|date:"Y"}}</td>
       <td></td>
       <td></td>
     </tr>
     <tr>
-      <td style='font-size: smaller;'>IAM</td>
+      <td style="background: #4A97D4; color:white;">IAM</td>
       <td>{{pacient.iam}}</td>
       <td></td>
       <td></td>
@@ -71,7 +70,7 @@
       <td></td>
     </tr>
     <tr>
-      <td style='font-size: smaller;'>ACV</td>
+      <td style="background: #4A97D4; color:white;">ACV</td>
       <td>{{pacient.iam}}</td>
       <td></td>
       <td></td>
@@ -79,7 +78,7 @@
       <td></td>
     </tr>
     <tr>
-      <td style='font-size: smaller;'>Revasc</td>
+      <td style="background: #4A97D4; color:white;">Revasc</td>
       <td>{{pacient.iam}}</td>
       <td></td>
       <td></td>
@@ -87,7 +86,7 @@
       <td></td>
     </tr>
     <tr> 
-      <td style='font-size: smaller;'>ENFVP</td>
+      <td style="background: #4A97D4; color:white;">ENFVP</td>
       <td>{{pacient.iam}}</td>
       <td></td>
       <td></td>
@@ -95,7 +94,7 @@
       <td></td>
     </tr>
     <tr>
-      <td style='font-size: smaller;'>ACV AIT</td>
+      <td style="background: #4A97D4; color:white;">ACV AIT</td>
       <td>{{pacient.iam}}</td>
       <td></td>
       <td></td>
@@ -103,7 +102,7 @@
       <td></td>
     </tr>
     <tr>
-      <td style='font-size: smaller;'>FECVT</td>
+      <td style="background: #4A97D4; color:white;">FECVT</td>
       <td>{{pacient.iam}}</td>
       <td></td>
       <td></td>
@@ -114,6 +113,7 @@
 
   </div>
   <div class='box-65'>
+  <label>Detalles medicos: </label> {{pacient.medical_details}}<br>
 
     {% if studies_list %}
       <table style="width:100%; top: 0;">
@@ -131,14 +131,14 @@
           <a class=" "href="/pacient/{{pacient.id}}/{{studies.id}}"> {{studies.date}}</a>
         </td>
         <td>{{studies.comments}}</td>
-        <td><a href="/pacient/{{pacient.id}}/{{studies.id}}/edit"> editar</a></td>
-        <td>print</td>
-        <td><a href="/pacient/{{pacient.id}}/{{studies.id}}/delete">Eliminar</a></td>
+        <td style="width: 60px;"><div class="hover-edit"><a href="/pacient/{{pacient.id}}/{{studies.id}}/edit"> editar</a></div></td>
+        <td style="width: 60px;"><div class="hover-edit"><a href="{% url 'export_pdf'%}">print</a></div></td>
+        <td style="width: 60px;"><div class="hover-delete"><a href="/pacient/{{pacient.id}}/{{studies.id}}/delete">Eliminar</a></div></td>
       </tr>
     {% endfor %}
       </table>
     {% else %}
-      <p>No studies.</p>
+      <p style="display:center;">No hay estudios.</p>
     {% endif %}
   </div>
   </body>

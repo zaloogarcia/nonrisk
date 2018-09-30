@@ -59,6 +59,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.media',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -124,5 +125,7 @@ STATICFILES_DIRS = (
 
 STATIC_URL = '/static/'
 STATIC_ROOT =  "nonrisk/static"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'

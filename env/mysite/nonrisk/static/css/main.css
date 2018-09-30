@@ -214,16 +214,16 @@ iframe {
 }
 .box-65{
   width:65%;
-  padding: 20px;
+  padding: 36px;
   height: 100%
 }
 
 .box-33{
   width: 30%;
   height: 100%;
-  padding-right:200px;
   border-color: black;
   text-align:center;
+  display: grid;
 }
 
 .box-33-study{
@@ -245,9 +245,7 @@ iframe {
   flex-wrap:;
 }
 
-canvas { 
-  background:url(/static/images/arterias.jpg);
-  background-size: 100% 100%;
+canvas {
 }
 
 .box-grid{
@@ -330,7 +328,6 @@ canvas {
 
 .container-list a:hover{
   border-radius: 15px;
-  padding:3px;
   background-color: #ddd;
   color: black;
 }
@@ -338,15 +335,17 @@ canvas {
 .hover-delete a:hover{
   border-radius: 15px;
   background-color: red;
+  padding-left: 3px;
+  padding-right: 3px;
   color: black;
-  float: left;
 }
 
 .hover-edit a:hover{
   border-radius: 15px;
   background-color: #2196F3;
+  padding-left: 3px;
+  padding-right: 3px;
   color: black;
-  float: left;
 }
 
 .hover-logout a:hover{

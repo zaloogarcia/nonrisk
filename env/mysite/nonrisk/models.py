@@ -92,6 +92,7 @@ class Studies(models.Model):
     pcr = models.IntegerField()
 
     comments = models.CharField(max_length=300, null=True, blank=True)
+    photo = models.ImageField('Studies photo',upload_to = '', null=True, blank=True)
 
     def __str__(self):
         name = str(self.id)

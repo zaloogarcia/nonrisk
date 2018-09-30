@@ -1,6 +1,7 @@
 {% extends 'navbar.html' %}
 {% block content %}
 {% load static %}
+
 <form method='POST' action='{% url 'study_add' pacient.id %}'>
   {% csrf_token %}
   
@@ -39,18 +40,23 @@
       </div>
       <br>
         <input name='comments' style='width: 100%;' type="text" placeholder="Comentarios">
-
+        <br>
     <div style='width:100%; text-align: center;'>
 
-      <canvas id="myCanvas" width="700" height="500" style="border:1.5px solid #000000;"></canvas>
+      <canvas id="myCanvas" width="700" height="500" style="border:1.5px solid #000000;">Upgrade your browser</canvas>
+
 
       <input type="range" id="myRange" name="amountRange" value="1" min="1" max="50" oninput="this.form.amountInput.value=this.value" onclick="lineWidthRange()">
-      <button class="button" onclick="erase()">CLEAR</button>
+      <button onclick="erase()">CLEAR</button>
+      <p id="demo"></p>
       <script type="text/javascript" src="/static/js/script.js"></script>
+      <input type="hidden" name="image_width" value="700">
+      <input type="hidden" name="image_height" value="500">
+      <input type="hidden" id='image_data' name="image_data" value="">
     </div>
 
     <div style='width:100%; text-align: center;'>
-    <input name='Done' type="checkbox" required=''>
+    <input name='Done' type="checkbox" required='' onclick="saveImage()">
     <button type="submit">Guardar</button>
     </div>
   </div>

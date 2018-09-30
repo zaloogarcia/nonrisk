@@ -45,8 +45,9 @@
       <div class='hover-delete'>
         <a href="/pacient/{{pacient.id}}/delete">Eliminar Paciente</a>
       </div>
-      <form  action="action_page.php" style="float: right;">
-        <input type="int" placeholder="Search.." name="search">
+      <form  method='POST' action="{% url 'pacient_search'%}" style="float: right;">
+        {% csrf_token %}
+        <input type="text" placeholder="Search.." name="data">
         <button type="submit"><i class="fa fa-search"></i></button>
       </form> 
   </div>

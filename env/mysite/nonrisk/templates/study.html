@@ -10,62 +10,67 @@
   <div class='box-33' style='padding:0px; float:left;'>
     <table>
       <tr>
-        <td>Peso (kg): </td><td>{{study.weight}}</td>
+        <td style="background: #4A97D4; color:white;">Peso (kg): </td><td>{{study.weight}}</td>
       </tr>
       <tr>
-        <td>Altura (cm):  </td><td>{{study.height}}</td>
+        <td style="background: #4A97D4; color:white;">Altura (cm):  </td><td>{{study.height}}</td>
       </tr>
       <tr>
-        <td>TAS (mmHg): </td> <td>{{study.tas}}</td>
+        <td style="background: #4A97D4; color:white;">TAS (mmHg): </td> <td>{{study.tas}}</td>
       </tr>
       <tr>
-        <td>TAD (mmHg): </td> <td>{{study.tad}}</td>
+        <td style="background: #4A97D4; color:white;">TAD (mmHg): </td> <td>{{study.tad}}</td>
       </tr>
       <tr>
-        <td>Pulso (lpm): </td> <td>{{study.pulse}}</td>
+        <td style="background: #4A97D4; color:white;">Pulso (lpm): </td> <td>{{study.pulse}}</td>
       </tr>
     </table>
   </div>
   <div class='box-33' style='width:36%'>
     <table>
       <tr>
-        <td>Col Total (mg/dl): </td><td> {{study.diabetes_chol_level}}</td>
+        <td style="background: #4A97D4; color:white;">Col Total (mg/dl): </td><td> {{study.diabetes_chol_level}}</td>
       </tr>
       <tr>
-        <td>HDL (mg/dl): </td><td>{{study.diabetes_hdl_level}}</td>
+        <td style="background: #4A97D4; color:white;">HDL (mg/dl): </td><td>{{study.diabetes_hdl_level}}</td>
       </tr>
       <tr>
-        <td>LDL (mg/dl): </td><td>{{study.diabetes_ldl_level}}</td>
+        <td style="background: #4A97D4; color:white;">LDL (mg/dl): </td><td>{{study.diabetes_ldl_level}}</td>
       </tr>
       <tr>
-      <td>Triglic (mg/dl): </td><td>{{study.diabetes_tri_level}}</td>
+      <td style="background: #4A97D4; color:white;">Triglic (mg/dl): </td><td>{{study.diabetes_tri_level}}</td>
       </tr>
       <tr>
-      <td>Glucemia (mg/dl): </td><td>{{study.glucemia}}</td>
+      <td style="background: #4A97D4; color:white;">Glucemia (mg/dl): </td><td>{{study.glucemia}}</td>
       </tr>
     </table>
   </div>
   <div class='box-33'>
     <table>
       <tr>
-      <td>HbA1c(%): </td><td> {{study.hba1c}}</td>
+      <td style="background: #4A97D4; color:white;">HbA1c(%): </td><td> {{study.hba1c}}</td>
       </tr>
       <tr>
-      <td>Ac Urico (mg/dl): </td><td> {{study.ac_uric}}</td>
+      <td style="background: #4A97D4; color:white;">Ac Urico (mg/dl): </td><td> {{study.ac_uric}}</td>
       </tr>
       <tr>
-      <td>Creat (mm/dl): </td><td> {{study.creat}}</td>
+      <td style="background: #4A97D4; color:white;">Creat (mm/dl): </td><td> {{study.creat}}</td>
       </tr>
       <tr>
-      <td>TSH (mIU/L): </td><td> {{study.tsh}}</td>
+      <td style="background: #4A97D4; color:white;">TSH (mIU/L): </td><td> {{study.tsh}}</td>
       </tr>
       <tr>
-      <td>PCR u (ng/ml): </td><td> {{study.pcr}}</td>
+      <td style="background: #4A97D4; color:white;">PCR u (ng/ml): </td><td> {{study.pcr}}</td>
       </tr>
     </table>
-
-
   </div>
+  <div class="box-65">
+    {% if study.photo %}
+    <img src="{{study.photo.url}}" alt="img">
+    {% endif %}
+  </div>
+
+
   </body>
 </div>
 {% endblock %}
