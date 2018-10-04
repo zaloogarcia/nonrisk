@@ -5,6 +5,7 @@ from io import *
 from PIL import Image
 from django.http import *
 from nonrisk.forms import *
+import xhtml2pdf.pisa as pisa
 from nonrisk.models import *
 from datetime import datetime
 from django.template import loader
@@ -14,14 +15,18 @@ from django.db import IntegrityError
 from django.views.generic import View
 from django.forms.models import model_to_dict
 from django.shortcuts import render, redirect
+from django.core.files.base import ContentFile
+from django.template.loader import get_template
 from django.template.defaulttags import register
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_list_or_404, get_object_or_404
-from django.core.files.base import ContentFile
 
-# NEED TO INSTALL PILLOW
-# NEED TO INSTALL PDFKIT
+# NEED TO INSTALL: - PILLOW
+#                  - PDFKIT
+#                  - REPORTLAB
+#                  _ xhtml2pdf
+
 
 def RepresentsInt(s):
     try: 
@@ -326,23 +331,25 @@ def study_delete(request, studies_id, pacient_id):
     context = {'studies': studies}
     return redirect('pacient_view', pacient_id)
 
-def export_pdf(request):
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="mypdf.pdf"'
+def export_pdf(request, pacient_id, studies_id):
+    template = get_template('pdf.html')
+    pacient = Pacient.objects.filter(id = pacient_id) [:1].get()
+    studies = Studies.objects.filter(id = studies_id) [:1].get()
+    
+    context = {'pacient':pacient, 'studies':studies}
 
-    buffer = BytesIO()
-    p = canvas.Canvas(buffer)
+    html = template.render(context)
+    response = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), response)
+    if not pdf.err:
+        return HttpResponse(response.getvalue(), content_type='application/pdf')
+    else:
+        return HttpResponse("Error Rendering PDF", status=400)
 
-    # Start writing the PDF here
-    p.drawString(100, 100, 'Hello world.')
-    # End writing
+def test(request, pacient_id, studies_id):
+    pacient = Pacient.objects.filter(id=pacient_id) [:1].get()
+    studies = Studies.objects.filter(id=studies_id) [:1].get()
 
-    p.showPage()
-    p.save()
-
-    pdf = buffer.getvalue()
-    buffer.close()
-    response.write(pdf)
-
-    return response
+    context = { 'pacient' : pacient, 'studies': studies}
+    return render(request, 'test.html' , context)
 
