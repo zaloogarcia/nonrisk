@@ -72,6 +72,7 @@ class Studies(models.Model):
     pacient = models.ForeignKey(Pacient, on_delete=models.CASCADE)
     id = models.AutoField(primary_key=True)
     date = models.DateField()
+    doctor = models.CharField(max_length=300, blank=True, null=True)
 
     weight = models.IntegerField() #in kg
     height  = models.IntegerField() #in cm
@@ -79,10 +80,10 @@ class Studies(models.Model):
     tad = models.IntegerField()
     pulse = models.IntegerField()
 
-    diabetes_chol_level = models.IntegerField(null=True,blank=True) #Chol Level
-    diabetes_hdl_level = models.IntegerField(null=True,blank=True)  #TRI Level
-    diabetes_ldl_level = models.IntegerField(null=True,blank=True)  #HDL Level
-    diabetes_tri_level = models.IntegerField(null=True,blank=True)  #LDL Level
+    chol_level = models.IntegerField(null=True,blank=True) #Chol Level
+    hdl_level = models.IntegerField(null=True,blank=True)  #TRI Level
+    ldl_level = models.IntegerField(null=True,blank=True)  #HDL Level
+    tri_level = models.IntegerField(null=True,blank=True)  #LDL Level
     
     glucemia  = models.IntegerField()
     hba1c = models.IntegerField()
@@ -93,6 +94,7 @@ class Studies(models.Model):
 
     comments = models.CharField(max_length=300, null=True, blank=True)
     photo = models.ImageField('Studies photo',upload_to = '', null=True, blank=True)
+    graphic = models.ImageField('Graphic photo', upload_to = '', null = True, blank=True)
 
     def __str__(self):
         name = str(self.id)

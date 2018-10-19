@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'nonrisk.apps.NonriskConfig',
+    'django_cleanup',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -126,6 +127,6 @@ STATICFILES_DIRS = (
 STATIC_URL = '/static/'
 STATIC_ROOT =  "nonrisk/static"
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'

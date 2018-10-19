@@ -17,6 +17,6 @@ class StudiesForm(forms.ModelForm):
 	class Meta:
 		model = Studies
 		fields = ('pacient','id','date','weight','height','tas','tad','pulse',
-			'diabetes_chol_level','diabetes_hdl_level' ,'diabetes_ldl_level',
-			'diabetes_tri_level' ,'glucemia','hba1c','ac_uric','creat','tsh',
+			'chol_level','hdl_level' ,'ldl_level',
+			'tri_level' ,'glucemia','hba1c','ac_uric','creat','tsh',
 			'pcr','comments')

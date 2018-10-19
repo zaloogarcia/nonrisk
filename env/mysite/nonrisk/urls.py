@@ -12,7 +12,6 @@ urlpatterns = [
     path('pacient/<int:pacient_id>/add', views.study_add, name='study_add'),
     path('pacient/<int:pacient_id>/<int:studies_id>', views.study_view, name='study_view'),
     path('pacient/<int:pacient_id>/<int:studies_id>/pdf', views.export_pdf, name='export_pdf'),
-    path('pacient/<int:pacient_id>/<int:studies_id>/test', views.test, name='test'),
     path('pacient/<int:pacient_id>/<int:studies_id>/edit', views.study_edit, name='study_edit'),
     path('pacient/<int:pacient_id>/<int:studies_id>/delete', views.study_delete, name='study_delete'),
 ]

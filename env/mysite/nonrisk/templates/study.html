@@ -29,16 +29,16 @@
   <div class='box-33' style='width:36%'>
     <table>
       <tr>
-        <td style="background: #4A97D4; color:white;">Col Total (mg/dl): </td><td> {{study.diabetes_chol_level}}</td>
+        <td style="background: #4A97D4; color:white;">Col Total (mg/dl): </td><td> {{study.chol_level}}</td>
       </tr>
       <tr>
-        <td style="background: #4A97D4; color:white;">HDL (mg/dl): </td><td>{{study.diabetes_hdl_level}}</td>
+        <td style="background: #4A97D4; color:white;">HDL (mg/dl): </td><td>{{study.hdl_level}}</td>
       </tr>
       <tr>
-        <td style="background: #4A97D4; color:white;">LDL (mg/dl): </td><td>{{study.diabetes_ldl_level}}</td>
+        <td style="background: #4A97D4; color:white;">LDL (mg/dl): </td><td>{{study.ldl_level}}</td>
       </tr>
       <tr>
-      <td style="background: #4A97D4; color:white;">Triglic (mg/dl): </td><td>{{study.diabetes_tri_level}}</td>
+      <td style="background: #4A97D4; color:white;">Triglic (mg/dl): </td><td>{{study.tri_level}}</td>
       </tr>
       <tr>
       <td style="background: #4A97D4; color:white;">Glucemia (mg/dl): </td><td>{{study.glucemia}}</td>
@@ -64,9 +64,11 @@
       </tr>
     </table>
   </div>
-  <div class="box-65">
+  <div>
     {% if study.photo %}
     <img src="{{study.photo.url}}" alt="img">
+    <img src="{{study.graphic.url}}" alt="img">
+
     {% endif %}
   </div>
 

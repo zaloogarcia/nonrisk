@@ -1,12 +1,20 @@
+from django.core import serializers
 import re
 import base64
+import tkinter
 import io
 from io import *
+import PIL
 from PIL import Image
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pylab
+from pylab import *
 from django.http import *
 from nonrisk.forms import *
 import xhtml2pdf.pisa as pisa
 from nonrisk.models import *
+from datetime import date
 from datetime import datetime
 from django.template import loader
 from reportlab.pdfgen import canvas
@@ -21,11 +29,15 @@ from django.template.defaulttags import register
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_list_or_404, get_object_or_404
+from django.core.files.images import ImageFile
 
 # NEED TO INSTALL: - PILLOW
 #                  - PDFKIT
 #                  - REPORTLAB
-#                  _ xhtml2pdf
+#                  - xhtml2pdf
+#                  - matplotlib
+#                  -sudo apt-get install python3-tk
+#                  -django-cleanup
 
 
 def RepresentsInt(s):
@@ -34,6 +46,10 @@ def RepresentsInt(s):
         return True
     except ValueError:
         return False
+
+def ageFromDate(born):
+    today = date.today()
+    return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
 @register.filter
 def get_item(dictionary, key): return dictionary.get(key)
@@ -65,6 +81,7 @@ def pacients_view(request):
      'last_studies_date': last_studies_date_dict}
     return render(request,'pacients.html',context)
 
+@login_required
 def pacient_search(request):
     print(request.method)
     if request.method == 'POST':
@@ -99,7 +116,7 @@ def pacient_search(request):
         print (context)
         return render(request, 'pacient_search.html', context)
 
-
+@login_required
 def pacient_view(request,pacient_id): 
     try:
         pacient = Pacient.objects.filter(id=pacient_id).values()[:1].get()
@@ -109,7 +126,7 @@ def pacient_view(request,pacient_id):
         raise Http404("Pacient does not exist")
     return render(request, 'pacient.html', context)
 
-
+@login_required
 def pacient_add(request):
     try:
         if request.method == 'POST':
@@ -159,7 +176,7 @@ def pacient_add(request):
     except IntegrityError:
         return HttpResponse("Pacient with the same ID exist")
 
-
+@login_required
 def pacient_edit(request, pacient_id):
     try:
         pacient = Pacient.objects.filter(id=pacient_id).get()
@@ -215,7 +232,7 @@ def pacient_edit(request, pacient_id):
         
         return render(request, 'pacient.html', model_to_dict(pacient))
 
-
+@login_required
 def pacient_delete(request, pacient_id):
         Pacient.objects.filter(id=pacient_id).delete()
 
@@ -223,7 +240,7 @@ def pacient_delete(request, pacient_id):
         context = {'pacients_list': pacients_list,}
         return redirect('pacients_view')
 
-
+@login_required
 def study_view(request, pacient_id, studies_id):
     try:
         study = Studies.objects.filter(id=studies_id) [:1].get()
@@ -233,6 +250,7 @@ def study_view(request, pacient_id, studies_id):
         raise Http404("Study does not exist")
     return render(request, 'study.html', context)
 
+@login_required
 def study_add(request, pacient_id):
     pacient = Pacient.objects.filter(id=pacient_id).get()
 
@@ -244,15 +262,67 @@ def study_add(request, pacient_id):
         image_data = base64.b64decode(image_data)
         image_data = BytesIO(image_data)
         im = Image.open(image_data)
-        filename = str(pacient) + str(request.POST.get('date')) + '.png'
+        filename = 'Arterias-'+ str(pacient.id) + '-' + str(request.POST.get('date')) + '.png'
         tempfile = im
         tempfile_io = BytesIO()
         tempfile.save(tempfile_io, format=im.format)
 
+        # Graphic chart
+        leftarea = request.POST.get('areaizquierda')
+        rightarea = request.POST.get('areaderecha')
+        totalarea = float(leftarea) + float(rightarea)
+        age = ageFromDate(pacient.date_of_birth)
+
+        print(age)
+        print(totalarea)
+        xlabel('Edad')
+        ylabel('Area total de Ateroclerosis(mm²)')
+        title('Promedio de Area de Placa por Edad/Sexo')
+
+        # Prevencion primaria
+        # Women
+        if (pacient.iam or pacient.acv or pacient.revasc or pacient.enfvp or pacient.acv_ait):
+            plt.plot(age, totalarea, 'ko', label='Usted')
+            plt.plot([30,  38.0, 43, 48, 53, 58, 63, 68, 73, 78],
+                     [10, 18, 25, 36, 45, 75, 100, 108, 130, 160],
+                     'ro', label='Mujeres')
+            # Men
+            plt.plot([36, 40, 45, 50, 55, 60,  65,   70, 75,  80],
+                     [15, 20, 40, 55, 90, 125, 160, 190, 210, 248],
+                     'bo', label='Hombres')
+            plt.legend(loc='best')
+            plt.axis([25, 85, -5, 260])
+
+        # Prevencion secundaria
+        else:
+            plt.plot(age, totalarea, 'ko', label='Usted')
+            plt.plot([28.63,  38.0,   43.0,   48.0,   53.0,   58.0,    63.0,    68.0,    73.0,    77.0],
+                     [2.4561, 2.4561, 2.8070, 2.8070, 4.9123, 11.9298, 15.4386, 22.1053, 32.2807, 41.4035],
+                     'ro', label='Mujeres')
+            # Men
+            plt.plot([36,     40,     45,     50,     55,      60,      65,      70,      75,      79],
+                     [2.4561, 2.8070, 5.6140, 9.8246, 14.7368, 18.2456, 29.4737, 39.2982, 44.5614, 78.2456],
+                     'bo', label='Hombres')           
+            plt.legend(loc='best')
+            plt.axis([25, 85, -5, 80])
+
+
+        # Store image in a string buffer
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format="png")
+        figure = ImageFile(buffer)
+        figurename = 'Grafico-'+ str(pacient.id) + '-' + str(request.POST.get('date')) + '.png'
+        print(figure)
+        # canvas = pylab.get_current_fig_manager().canvas
+        # canvas.draw()
+        # pilImage = PIL.Image.FROM("RGB", canvas.get_width_height(), canvas.tostring_rgb())
+        # pilImage.save(buffer, "PNG")
+        # pylab.close()
 
         new_study = Studies.objects.create(
             pacient=pacient,
             date= request.POST.get('date'),
+            doctor=request.POST.get('doctor'),
             
             weight=request.POST.get('weight'),
             height=request.POST.get('height'),
@@ -260,10 +330,10 @@ def study_add(request, pacient_id):
             tad=request.POST.get('tad'),
             pulse=request.POST.get('pulse'),
 
-            diabetes_chol_level=None if request.POST.get('diabetes_chol_level') == '' else request.POST.get('diabetes_chol_level'),
-            diabetes_hdl_level=None if request.POST.get('diabetes_hdl_level') == '' else request.POST.get('diabetes_hdl_level'),
-            diabetes_ldl_level=None if request.POST.get('diabetes_ldl_level') == '' else request.POST.get('diabetes_ldl_level'),
-            diabetes_tri_level=None if request.POST.get('diabetes_tri_level') == '' else request.POST.get('diabetes_tri_level'),
+            chol_level=None if request.POST.get('chol_level') == '' else request.POST.get('chol_level'),
+            hdl_level=None if request.POST.get('hdl_level') == '' else request.POST.get('hdl_level'),
+            ldl_level=None if request.POST.get('ldl_level') == '' else request.POST.get('ldl_level'),
+            tri_level=None if request.POST.get('tri_level') == '' else request.POST.get('tri_level'),
 
             glucemia=request.POST.get('glucemia'),
             hba1c=request.POST.get('hba1c'),
@@ -275,6 +345,8 @@ def study_add(request, pacient_id):
             comments= None if request.POST.get('comments') == '' else request.POST.get('comments'),
         )
         new_study.photo.save(filename, ContentFile(tempfile_io.getvalue()) , save = True) #save the photo
+        new_study.graphic.save(figurename, ContentFile(buffer.getvalue()) , save = True) #save the photo
+
         
         return redirect('study_view', pacient.id, new_study.id)
     else:
@@ -282,6 +354,7 @@ def study_add(request, pacient_id):
         context = {'pacient': pacient}
         return render(request,'study_add.html', context)
 
+@login_required
 def study_edit(request, pacient_id, studies_id):
     try:
         pacient = Pacient.objects.filter(id=pacient_id)
@@ -301,6 +374,7 @@ def study_edit(request, pacient_id, studies_id):
         new_study = Studies.objects.create(
             pacient=pacient,
             date= request.POST.get('date'),
+            doctor=request.POST.get('doctor'),
             
             weight=request.POST.get('weight'),
             height=request.POST.get('height'),
@@ -308,10 +382,10 @@ def study_edit(request, pacient_id, studies_id):
             tad=request.POST.get('tad'),
             pulse=request.POST.get('pulse'),
 
-            diabetes_chol_level=None if request.POST.get('diabetes_chol_level') == '' else request.POST.get('diabetes_chol_level'),
-            diabetes_hdl_level=None if request.POST.get('diabetes_hdl_level') == '' else request.POST.get('diabetes_hdl_level'),
-            diabetes_ldl_level=None if request.POST.get('diabetes_ldl_level') == '' else request.POST.get('diabetes_ldl_level'),
-            diabetes_tri_level=None if request.POST.get('diabetes_tri_level') == '' else request.POST.get('diabetes_tri_level'),
+            chol_level=None if request.POST.get('chol_level') == '' else request.POST.get('chol_level'),
+            hdl_level=None if request.POST.get('hdl_level') == '' else request.POST.get('hdl_level'),
+            ldl_level=None if request.POST.get('ldl_level') == '' else request.POST.get('ldl_level'),
+            tri_level=None if request.POST.get('tri_level') == '' else request.POST.get('tri_level'),
 
             glucemia=request.POST.get('glucemia'),
             hba1c=request.POST.get('hba1c'),
@@ -325,18 +399,33 @@ def study_edit(request, pacient_id, studies_id):
         
         return render(request, 'study.html', context)
 
+@login_required
 def study_delete(request, studies_id, pacient_id):
     study = Studies.objects.filter(id=studies_id).delete()
     studies = Studies.objects.filter(pacient=pacient_id)
     context = {'studies': studies}
     return redirect('pacient_view', pacient_id)
 
+@login_required
 def export_pdf(request, pacient_id, studies_id):
     template = get_template('pdf.html')
     pacient = Pacient.objects.filter(id = pacient_id) [:1].get()
     studies = Studies.objects.filter(id = studies_id) [:1].get()
-    
-    context = {'pacient':pacient, 'studies':studies}
+
+    # Patient drawing
+    with open(str(studies.photo.path), "rb") as image_file:
+        encoded = base64.b64encode(image_file.read())
+    encoded= encoded.decode()
+    url_photo = 'data:image/png;base64,{}'.format(encoded)
+
+    # Patient chart
+    with open(str(studies.graphic.path), "rb") as image_file:
+        encoded2 = base64.b64encode(image_file.read())
+    encoded2 = encoded2.decode()
+    url_graphic = 'data:image/png;base64,{}'.format(encoded2)
+
+
+    context = {'pacient':pacient, 'studies':studies, 'photo': url_photo, 'graphic': url_graphic}
 
     html = template.render(context)
     response = BytesIO()
@@ -346,10 +435,4 @@ def export_pdf(request, pacient_id, studies_id):
     else:
         return HttpResponse("Error Rendering PDF", status=400)
 
-def test(request, pacient_id, studies_id):
-    pacient = Pacient.objects.filter(id=pacient_id) [:1].get()
-    studies = Studies.objects.filter(id=studies_id) [:1].get()
-
-    context = { 'pacient' : pacient, 'studies': studies}
-    return render(request, 'test.html' , context)
 

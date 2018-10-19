@@ -5,95 +5,388 @@
     <style type="text/css">
         @page {
             size: A4;
-            margin: 1cm;
+            margin: 0.7cm;
+            margin-top: 0cm;
+        }
+
+        body {
+          font-size: 1.039;
+        }
+
+        hr {
+            display: block;
+            height: 1px;
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin: 1em 0;
+            padding: 0;
+        }
+
+        @font-face {
+           font-family: DejaMono;
+           src: url(font/DejaVuSansMono.ttf);
+        }
+
+        table{
         }
         /* A4 : width 21 cm
                 height 29.7 cm*/
-        .logo{
-            width:5.5cm;
-            height: 5.54cm;
-            text-align: center;
-            display: inline-block;
-        }
 
-        .patientData {
-            width:9.5cm;
-            height: 5.54cm;
-        }
-
-        .table {
-            width: 100%;
-            max-width: 100%;
-            margin-bottom: 5px;
-            background-color: #fff;
-        }
-        .table th,
-        .table td {
-            padding: 5px;
-            vertical-align: top;
-            border-top: 1px solid #000;
-            text-align: center;
-        }
-        .table thead th {
-            vertical-align: bottom;
-            border-bottom: 2px solid #000;
-        }
-        .table tbody + tbody {
-            border-top: 2px solid #000;
-        }
-        .table .table {
-            background-color: #fff;
-        }
-        .list-group {
-            display: block;
-            width: 100%;
-            list-style: none;
-            margin-top: 15px;
-            margin-bottom: 15px;
-        }
-        .list-group p {
-            width: 100%;
-            height: 20px;
-            line-height: 20px;
-            list-style: none;
-            font-size: 1.1em;
-        }
     </style>
 </head>
 <body>
-<table>
+    <table style='padding 1.36px; font-size:1.05em'>
     <tr>
-        <th>
-            <div class='logo'>
-                <img src="http://thebettinguniversity.org/wp-content/uploads/2016/06/non-risk-free-badge.png">
-            </div>
-        </th>
-        <th>
-            <div class='patientData'>
-                <table>
-                    <tr>
-                        
-                        <th>
-                            Nombre Completo: {{pacient.name}}  {{pacient.name_second}}  {{pacient.name_last}}
-                        </th>
-                        <th>
-                            Sexo: {{pacient.sex}}
-                        </th>
-                    </tr>
-                    <tr>
-                        <th>
-                            Domicilio: {{pacient.address}}
-                        </th>
-                        <th>
-                            Fecha de Nacimiento: {{pacient.date_of_birth}}
-                        </th>
-                    </tr>
-
-                </table>
-            </div>
-        </th>
+      <td>
+        <img src="https://raw.githubusercontent.com/zaloogarcia/nonrisk/master/env/mysite/nonrisk-logo.png">
+      </th>
+      <td>
+        <table>
+          <tr>
+            <td><b>Nombre Completo:</b></td>
+            <td><u> {{pacient.name}} {{pacient.name_second}} {{pacient.name_last}}</u></td>
+          </tr>
+          <tr>
+            {%if pacient.sex == 'F'%}
+            <td><b>Sexo:</b><u>Femenino</u></td>
+            {% else %}
+            <td><b>Sexo:</b><u>Masculino</u></td>
+            {%endif%}
+            <td><b>Domicilio:</b> <u>{{pacient.address}}</u></td>
+          </tr>
+          </table>
+          <table>
+          <tr>
+            <td><b>Nacimiento:</b> {{pacient.date_of_birth|date:"d"}}/{{pacient.date_of_birth|date:'m'}}/{{pacient.date_of_birth|date:"Y"}}</td>
+            <td style=''><b>DNI:</b> <u>{{pacient.id}}</u></td>
+          </tr>
+          <tr>
+            <td><b> Nº Teléfono:</b><u> {{pacient.phone}}</u></td>
+            <td><b>Doctor: </b><u>{{studies.doctor}}</u></td>
+          </tr>
+          </td>
+        </table>
+      </td>
     </tr>
-</table>
-
+    </table>
+    <hr/>
+    {%if pacient.medical_details == 'None'%}
+    <p style='font-size: 1.3;'> Antecedentes personales patológicos - Medicación concomitante: ninguno</p>
+    {%else%}
+    <p style='font-size: 1.3;'> Antecedentes personales patológicos - Medicación concomitante: {{pacient.medical_details}}</p>
+    {%endif%}
+    <hr/>
+    <table style='padding-top:3px; text-align:center; border: 1px solid #dddddd; font-size:1.05em'>
+      <tr>
+        <th style="background-color: #004C88; color:white;"></th>
+        <th style="background-color: #004C88; color:white;"></th>
+        <th style="background-color: #004C88; color:white;">Tipo</th>
+        <th style="background-color: #004C88; color:white;">Inicio</th>
+        <th style="background-color: #004C88; color:white;">Final</th>
+        <th style="background-color: #004C88; color:white;">Cantidad</th>
+      </tr>
+      <tr>
+        <td style="background-color: #004C88; color:white; width:200px">Tabaquismo</td>
+        {%if pacient.smoke == True%}
+          <td>Si</td>
+        {%else%}
+          <td>No</td>
+        {%endif%}
+        <td>-</td>
+        {%if pacient.smoke == False%}
+          <td>-</td>
+        {%else%}
+          <td>{{pacient.smoke_duration|date:"Y"}}</td>
+        {%endif%}
+        {%if pacient.smoke == False%}
+          <td>-</td>
+        {%else%}
+          <td>{{pacient.smoke_quit|date:"Y"}}</td>
+        {%endif%}
+        {%if pacient.smoke == False%}
+          <td>-</td>
+        {%else%}
+          <td>{{pacient.smoke_quantity}}</td>
+        {%endif%}
+      </tr>
+      <tr>
+        <td style="background-color: #004C88; color:white;">Diabetes Mellitus</td>
+        {%if pacient.diabetes == True%}
+          <td>Si</td>
+        {%else%}
+          <td>No</td>
+        {%endif%}
+        {%if pacient.diabetes == False%}
+          <td>-</td>
+        {%else%}
+          <td>{{pacient.diabetes_type}}</td>
+        {%endif%}
+        {%if pacient.diabetes == False%}
+          <td>-</td>
+        {%else%}
+          <td>{{pacient.diabetes_date|date:"Y"}}</td>
+        {%endif%}
+        <td>-</td>
+        <td>-</td>
+      <tr>
+        <td style="background-color: #004C88; color:white;">Hipertension Arterial</td>
+        {%if pacient.hyper == True%}
+          <td>Si</td>
+        {%else%}
+          <td>No</td>
+        {%endif%}
+        {%if pacient.hyper == False%}
+          <td>-</td>
+        {%else%}
+          <td>{{pacient.hyper_type}}</td>
+        {%endif%}
+        {%if pacient.hyper == False%}
+          <td>-</td>
+        {%else%}
+          <td>{{pacient.hyper_date|date:"Y"}}</td>
+        {%endif%}
+        <td>-</td>
+        <td>-</td>
+      </tr>
+          <tr>
+        <td style="background-color: #004C88; color:white;">Dislipidemia</td>
+        {%if pacient.dislipidemia == True%}
+          <td>Si</td>
+        {%else%}
+          <td>No</td>
+        {%endif%}
+        {%if pacient.dislipidemia == False%}
+          <td>-</td>
+        {%else%}
+          <td>{{pacient.dislipidemia_type}}</td>
+        {%endif%}
+        {%if pacient.dislipidemia == False%}
+          <td>-</td>
+        {%else%}
+          <td>{{pacient.dislipidemia_date|date:"Y"}}</td>
+        {%endif%}
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td style="background-color: #004C88; color:white;">Antecedentes IRC</td>
+        {%if pacient.irc == True%}
+          <td>Si</td>
+        {%else%}
+          <td>No</td>
+        {%endif%}
+        {%if pacient.irc == False%}
+          <td>-</td>
+        {%else%}
+          <td>{{pacient.irc_type}}</td>
+        {%endif%}
+        {%if pacient.irc == False%}
+          <td>-</td>
+        {%else%}
+          <td>{{pacient.irc_date|date:"Y"}}</td>
+        {%endif%}
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td style="background-color: #004C88; color:white;">Antecedentes IAM</td>
+        {%if pacient.iam == True%}
+          <td>Si</td>
+        {%else%}
+          <td>No</td>
+        {%endif%}
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td style="background-color: #004C88; color:white;">Antecedentes ACV</td>
+        {%if pacient.acv == True%}
+          <td>Si</td>
+        {%else%}
+          <td>No</td>
+        {%endif%}
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td style="background-color: #004C88; color:white;">Antecedentes Revasc</td>
+        {%if pacient.revasc == True%}
+          <td>Si</td>
+        {%else%}
+          <td>No</td>
+        {%endif%}
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr> 
+        <td style="background-color: #004C88; color:white;">Antecedentes ENFVP</td>
+        {%if pacient.enfvp == True%}
+          <td>Si</td>
+        {%else%}
+          <td>No</td>
+        {%endif%}
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td style="background-color: #004C88; color:white;">Antecedentes ACV AIT</td>
+        {%if pacient.acv_ait == True%}
+          <td>Si</td>
+        {%else%}
+          <td>No</td>
+        {%endif%}
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td style="background-color: #004C88; color:white;">Antecedentes FECVT</td>
+        {%if pacient.fecvt == True%}
+          <td>Si</td>
+        {%else%}
+          <td>No</td>
+        {%endif%}
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>-</td>
+      </tr>
+    </table>
+  </hr>
+  <br>
+    <table style='padding-top:1px; border: 1px solid #ccc; text-align:center;'>
+      <td>
+        <table>
+          <td>
+            <table style='padding-top:1px;'>
+              <tr style='border-left: 1px solid #ccc;'>
+                <td>Peso (kg):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.weight}}</td>
+                <td>Col Total(mg/dl):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.chol_level}}</td>
+                <td>HbA1c (%):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.hba1c}}</td>
+              </tr>
+              <tr style='border-left: 1px solid #ccc;'>
+                <td>Altura (cm):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.height}}</td>
+                <td>HDL (mg/dl):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.hdl_level}}</td>
+                <td>Acido Úrico(mg/dl):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.ac_uric}}</td>
+              </tr>
+              <tr style='border-left: 1px solid #ccc;'>
+                <td>TAS (mmHg):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.tas}}</td>
+                <td>LDL (mg/dl):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.ldl_level}}</td>
+                <td>Creat (mg/dl):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.creat}}</td>
+              </tr>
+              <tr style='border-left: 1px solid #ccc;'>
+                <td>TAD (mmHg):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.tad}}</td>
+                <td>Triglic(mg/dl):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.tri_level}}</td>
+                <td>TSH (mIU/L):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.tsh}}</td>
+              </tr>
+              <tr style='border-left: 1px solid #ccc;'>
+                <td>Pulso (lpm):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.pulse}}</td>
+                <td>Glucemia(mg/dl):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.glucemia}}</td>
+                <td>PCR u(ng/ml):</td>
+                <td  style="background-color: #004C88; color:white;">{{studies.pcr}}</td>
+              </tr>
+            </table>
+          </td>
+        </table>
+      </td>
+    </table>
+    <table style='border: 1px solid #dddddd;'>
+      <td style='width:700px'>
+        <img src="{{photo}}"/>
+      </td>
+      <td  style='width:700px'>
+        <table style='border: 1px solid #dddddd;'>
+          <td style='width:500px'>
+            <img src="{{graphic}}"/>
+          </td>
+          <td style='text-align: center; width:110px; font-size:0.9em'>
+            <table style='text-align: center; width:110px '>
+              <tr>
+                <th style='width: 40px'> vel pico</th>
+                <th style='width: 80px'> porcentaje estenosis</th>
+              </tr>
+              <tr>
+                <td> mm/s</td>
+                <td> % </td>
+              </tr>
+              <tr>
+                <td>150</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>250</td>
+                <td>10</td>
+              </tr>
+              <tr>
+                <td>400</td>
+                <td>20</td>
+              </tr>
+              <tr>
+                <td>600</td>
+                <td>30</td>
+              </tr>
+              <tr>
+                <td>850</td>
+                <td>40</td>
+              </tr>
+              <tr>
+                <td>1250</td>
+                <td>50</td>
+              </tr>
+              <tr>
+                <td>1700</td>
+                <td>60</td>
+              </tr>
+              <tr>
+                <td>2300</td>
+                <td>70</td>
+              </tr>
+              <tr>
+                <td>2850</td>
+                <td>80</td>
+              </tr>
+              <tr>
+                <td>3000</td>
+                <td>90</td>
+              </tr>
+              <tr>
+                <td>3150</td>
+                <td>95</td>
+              </tr>
+              <tr>
+                <td>0</td>
+                <td>100</td>
+              </tr>
+            </table>
+          </td>
+        </table>
+      </td>
+    </table>
+    <p style='font-size: 1.1;'>Comentarios:</p>
+    <p stle='font-size:1em'>{{studies.comments}}</p>
+    <p style='font-size: 1.3; text-align:right'>Firma: _______________________________</p>
 </body>
 </html>

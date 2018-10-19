@@ -9,6 +9,7 @@ imageObj.src = '/static/images/arterias.jpg';
 function start() {
   ctx.drawImage(imageObj, 0, 0, myCanvas.width, myCanvas.height);
   canvas.onmousemove = lines();
+
   // document.getElementById("image_data").value = canvas.toDataURL("image/png", 1);
 };
 
@@ -73,6 +74,45 @@ function erase() {
 };
 
 function saveImage() {
+    ctx.closePath();
+    ctx.beginPath();
+
+    ctx.font = "16px Arial";
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 2;
+    
+    areaderecha = document.getElementById("areaderecha").value;
+    areaizquierda = document.getElementById("areaizquierda").value;
+    areatotal = Number(areaderecha) + Number(areaizquierda);
+    
+    areaderecha = areaderecha.toString();
+    areaizquierda = areaizquierda.toString();
+    areatotal = areatotal.toString();
+    
+    ctx.rect(532, 9, 160, 60); //derecha
+    ctx.rect(1, 9, 160, 60); //izquierda
+    ctx.fillStyle = "white";
+    ctx.fill();
+
+    ctx.fillStyle = "black";
+    
+    ctx.rect(1, 9, 160, 60); //izquierda
+    ctx.stroke();
+    ctx.rect(532, 9, 160, 60); //derecha
+    ctx.stroke();
+    
+    ctx.fillText("Área de placa", 534, 28);
+    ctx.fillText("Derecha(mm²): " + areaderecha, 534, 50);
+
+    ctx.fillText("Área de placa", 4, 28);
+    ctx.fillText("Izquierda(mm²): " + areaizquierda, 4, 50);
+
+    ctx.fillText("Área total ", 4, 186);
+    ctx.fillText("de placa(mm²): "+ areatotal, 4, 202);
+
+
+
+    
     final_image = canvas.toDataURL('image/png',1);
     document.getElementById('image_data').value=final_image;
 //   var final_image = new Image();
