@@ -1,5 +1,6 @@
 from django.core import serializers
 import re
+import math
 import base64
 import tkinter
 import io
@@ -140,6 +141,7 @@ def pacient_add(request):
                 phone= request.POST.get('phone'),
                 date_of_birth= request.POST.get('date_of_birth'),
                 medical_details= request.POST.get('medical_details'),
+                arterial_age = 0,
                 
                 smoke= request.POST.get('smoke') == 'on',
                 smoke_quantity= None if request.POST.get('smoke_quantity') == '' else request.POST.get('smoke_quantity'),
@@ -200,6 +202,7 @@ def pacient_edit(request, pacient_id):
             phone= request.POST.get('phone'),
             date_of_birth= request.POST.get('date_of_birth'),
             medical_details= request.POST.get('medical_details'),
+            arterial_age = pacient.arterial_age,
             
             smoke= request.POST.get('smoke') == 'on',
             smoke_quantity= None if request.POST.get('smoke_quantity') == '' else request.POST.get('smoke_quantity'),
@@ -307,17 +310,20 @@ def study_add(request, pacient_id):
             plt.axis([25, 85, -5, 80])
 
 
-        # Store image in a string buffer
+        # Store Chart in a string buffer
         buffer = io.BytesIO()
         plt.savefig(buffer, format="png")
         figure = ImageFile(buffer)
         figurename = 'Grafico-'+ str(pacient.id) + '-' + str(request.POST.get('date')) + '.png'
-        print(figure)
-        # canvas = pylab.get_current_fig_manager().canvas
-        # canvas.draw()
-        # pilImage = PIL.Image.FROM("RGB", canvas.get_width_height(), canvas.tostring_rgb())
-        # pilImage.save(buffer, "PNG")
-        # pylab.close()
+
+        # Closes chart plot
+        plt.clf()
+
+        # Arterial Age update
+        if pacient.sex == 'M' :
+            Pacient.objects.filter(id=pacient_id).update(arterial_age=(round(((math.log(totalarea/5.4175))/0.0426),4)))
+        elif pacient.sex == 'F':
+            Pacient.objects.filter(id=pacient_id).update(arterial_age=(round(((math.log(totalarea/4.1942))/0.0392),4)))
 
         new_study = Studies.objects.create(
             pacient=pacient,

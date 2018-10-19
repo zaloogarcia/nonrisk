@@ -18,6 +18,7 @@ class Pacient(models.Model):
     phone = models.IntegerField()
     date_of_birth = models.DateField()
     medical_details = models.CharField(max_length=300)
+    arterial_age = models.FloatField(null=True, blank=True)
 
     smoke = models.BooleanField()
     smoke_quantity = models.IntegerField(null=True, blank=True)

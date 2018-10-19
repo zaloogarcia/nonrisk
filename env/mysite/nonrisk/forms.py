@@ -5,7 +5,7 @@ class PacientForm(forms.ModelForm):
 
 	class Meta:
 		model = Pacient
-		fields = ('id', 'name','name_second','name_last','sex','address','phone',
+		fields = ('id', 'name','name_second','name_last','sex','address','phone', 'arterial_age',
 			'date_of_birth' ,'medical_details' ,'smoke','smoke_quantity' ,'smoke_duration',
 			'smoke_quit' , 'diabetes','diabetes_type','diabetes_date', 'hyper','hyper_type',
 			'hyper_date', 'dislipidemia','dislipidemia_type','dislipidemia_date','irc',
