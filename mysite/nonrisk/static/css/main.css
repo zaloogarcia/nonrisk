@@ -335,16 +335,12 @@ canvas {
 .hover-delete a:hover{
   border-radius: 15px;
   background-color: red;
-  padding-left: 3px;
-  padding-right: 3px;
   color: black;
 }
 
 .hover-edit a:hover{
   border-radius: 15px;
   background-color: #2196F3;
-  padding-left: 3px;
-  padding-right: 3px;
   color: black;
 }
 

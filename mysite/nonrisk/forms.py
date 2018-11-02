@@ -9,7 +9,7 @@ class PacientForm(forms.ModelForm):
 			'date_of_birth' ,'medical_details' ,'smoke','smoke_quantity' ,'smoke_duration',
 			'smoke_quit' , 'diabetes','diabetes_type','diabetes_date', 'hyper','hyper_type',
 			'hyper_date', 'dislipidemia','dislipidemia_type','dislipidemia_date','irc',
-			'irc_type', 'iam','acv','revasc','enfvp','acv_ait','fecvt')
+			'irc_type', 'iam','acv','revasc','enfvp','acv_ait','fecvt', 'race')
 
 
 class StudiesForm(forms.ModelForm):
@@ -19,4 +19,4 @@ class StudiesForm(forms.ModelForm):
 		fields = ('pacient','id','date','weight','height','tas','tad','pulse',
 			'chol_level','hdl_level' ,'ldl_level',
 			'tri_level' ,'glucemia','hba1c','ac_uric','creat','tsh',
-			'pcr','comments')
+			'pcr','comments', 'renal_filter')

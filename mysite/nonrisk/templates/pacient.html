@@ -10,11 +10,26 @@
     {{pacient.name}} {{pacient.name_second}} {{pacient.name_last}}
     </h4>
     <br>
-    <label>DNI: </label> {{pacient.id}}<br>
-    <label>Sexo: </label> {{pacient.sex}}<br>
-    <label>Domicilio: </label> {{pacient.Address}}<br>
-    <label>Telefono: </label> {{pacient.phone}}<br>
-    <label>Nacimiento: </label> {{pacient.date_of_birth}}  Edad Arterial: {{pacient.arterial_age}}<br>
+    <table>
+      <tr style='border-color:white;'>
+        <td style='border-color:white;'>DNI: {{pacient.id}}</td>
+        <td style='border-color:white;'>Sexo: {{pacient.sex}}</td>
+      </tr>
+      <tr style='border-color:white;'>
+        <td style='border-color:white;'>Domicilio:</td>
+        <td style='border-color:white;'>{{pacient.address}}</td>
+      </tr>
+      <tr style='border-color:white;'>
+        <td style='border-color:white;'>Telefono:</td>
+        <td style='border-color:white;'>{{pacient.phone}}</td>
+      </tr>
+      <tr style='border-color:white;'>
+        <td style='border-color:white;'>Nacimiento:</td>
+        <td style='border-color:white;'>{{pacient.date_of_birth}}</td>
+        <td style='border-color:white;'>Edad Arterial:</td>
+        <td style='border-color:white;'>{{pacient.arterial_age}}</td>
+      </tr>
+    </table>
     <table style='padding:30px; font-size: smaller;'>
       <tr>
         <th style='padding:5px;'></th>
@@ -40,7 +55,7 @@
         <td></td>
         <td></td>
       <tr>
-        <td style="background: #4A97D4; color:white;">Hipertension Arterial</td>
+        <td style="background: #4A97D4; color:white;">Hipertensión Arterial</td>
         <td>{{pacient.hyper}}</td>
         <td>{{pacient.hyper_type}}</td>
         <td>{{pacient.hyper_date|date:"Y"}}</td>
@@ -115,7 +130,7 @@
 
   </div>
   <div class='box-65'>
-  <label>Detalles medicos: </label> {{pacient.medical_details}}<br>
+  <label>Detalles médicos: </label> {{pacient.medical_details}}<br>
 
     {% if studies_list %}
       <table style="width:100%; top: 0;">
@@ -133,8 +148,8 @@
           <a class=" "href="/pacient/{{pacient.id}}/{{studies.id}}"> {{studies.date}}</a>
         </td>
         <td>{{studies.comments}}</td>
-        <td style="width: 60px;"><div class="hover-edit"><a href="/pacient/{{pacient.id}}/{{studies.id}}/edit"> editar</a></div></td>
-        <td style="width: 60px;"><div class="hover-edit"><a href="{% url 'export_pdf' pacient.id studies.id%}">print</a></div></td>
+        <td style="width: 60px;"><div class="hover-edit"><a href="/pacient/{{pacient.id}}/{{studies.id}}/edit"> Editar</a></div></td>
+        <td style="width: 60px;"><div class="hover-edit"><a href="{% url 'export_pdf' pacient.id studies.id%}">Imprimir</a></div></td>
         <td style="width: 60px;"><div class="hover-delete"><a href="/pacient/{{pacient.id}}/{{studies.id}}/delete">Eliminar</a></div></td>
       </tr>
     {% endfor %}

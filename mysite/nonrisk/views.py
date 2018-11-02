@@ -142,6 +142,7 @@ def pacient_add(request):
                 phone= request.POST.get('phone'),
                 date_of_birth= request.POST.get('date_of_birth'),
                 medical_details= request.POST.get('medical_details'),
+                race = request.POST.get('race'),
                 arterial_age = 0,
                 
                 smoke= request.POST.get('smoke') == 'on',
@@ -273,12 +274,14 @@ def study_add(request, pacient_id):
 
         # Graphic chart
         leftarea = request.POST.get('areaizquierda')
+        print(leftarea)
         rightarea = request.POST.get('areaderecha')
+        print(rightarea)
         totalarea = float(leftarea) + float(rightarea)
         age = ageFromDate(pacient.date_of_birth)
 
-        print(age)
-        print(totalarea)
+        print('edad ' + str(age))
+        print('area total ' + str(totalarea))
         xlabel('Edad')
         ylabel('Area total de Ateroclerosis(mm²)')
         title('Promedio de Area de Placa por Edad/Sexo')
@@ -286,27 +289,27 @@ def study_add(request, pacient_id):
         # Prevencion primaria
         # Women
         if (pacient.iam or pacient.acv or pacient.revasc or pacient.enfvp or pacient.acv_ait):
-            plt.plot(age, totalarea, 'ko', label='Usted')
+            plt.plot(age, totalarea, 'ro', label='Usted')
             plt.plot([30,  38.0, 43, 48, 53, 58, 63, 68, 73, 78],
                      [10, 18, 25, 36, 45, 75, 100, 108, 130, 160],
-                     'ro', label='Mujeres')
+                     color='grey', marker='o',linestyle='None', label='Mujeres')
             # Men
             plt.plot([36, 40, 45, 50, 55, 60,  65,   70, 75,  80],
                      [15, 20, 40, 55, 90, 125, 160, 190, 210, 248],
-                     'bo', label='Hombres')
+                     'ko', label='Hombres')
             plt.legend(loc='best')
             plt.axis([25, 85, -5, 260])
 
         # Prevencion secundaria
         else:
-            plt.plot(age, totalarea, 'ko', label='Usted')
+            plt.plot(age, totalarea, 'ro', label='Usted')
             plt.plot([28.63,  38.0,   43.0,   48.0,   53.0,   58.0,    63.0,    68.0,    73.0,    77.0],
                      [2.4561, 2.4561, 2.8070, 2.8070, 4.9123, 11.9298, 15.4386, 22.1053, 32.2807, 41.4035],
-                     'ro', label='Mujeres')
+                     color='grey', marker='o',linestyle='None', label='Mujeres')
             # Men
             plt.plot([36,     40,     45,     50,     55,      60,      65,      70,      75,      79],
                      [2.4561, 2.8070, 5.6140, 9.8246, 14.7368, 18.2456, 29.4737, 39.2982, 44.5614, 78.2456],
-                     'bo', label='Hombres')           
+                     'ko', label='Hombres')           
             plt.legend(loc='best')
             plt.axis([25, 85, -5, 80])
 
@@ -320,11 +323,26 @@ def study_add(request, pacient_id):
         # Closes chart plot
         plt.clf()
 
-        # Arterial Age update
+        # Arterial Age update and Renal filter Update
+        scr = float(request.POST.get('creat'))
+        renalFilter = 0
         if pacient.sex == 'M' :
-            Pacient.objects.filter(id=pacient_id).update(arterial_age=(round(((math.log(totalarea/5.4175))/0.0426),4)))
+            arterialAge = round(((math.log(totalarea/5.4175))/0.0426),4)
+            
+            if pacient.race == 'B': #Black
+                renalFilter = 141 * (min((scr/ 0.9), 1)**(-0.411))* (max(scr/0.9, 1)**(-1.209))* (0.993 ** float(age)) * 1.159
+            elif pacient.race == 'W': #White
+                renalFilter = 141 * (min((scr/ 0.9), 1)**(-0.411))* (max(scr/0.9, 1)**(-1.209))* (0.993 ** float(age))
+
         elif pacient.sex == 'F':
-            Pacient.objects.filter(id=pacient_id).update(arterial_age=(round(((math.log(totalarea/4.1942))/0.0392),4)))
+            arterialAge = round(((math.log(totalarea/4.1942))/0.0392),4)
+            if pacient.race == 'B':
+                renalFilter = 141 * (min((scr/ 0.7), 1)**(-0.329))* (max(scr/0.9, 1)**(-1.209))* (0.993 ** float(age)) *1.018 * 1.159
+            elif pacient.race == 'W':
+                renalFilter = 141 * (min((scr/ 0.9), 1)**(-0.329))* (max(scr/0.9, 1)**(-1.209))* (0.993 ** float(age)) * 1.018
+
+        Pacient.objects.filter(id=pacient_id).update(arterial_age= arterialAge)
+
 
         new_study = Studies.objects.create(
             pacient=pacient,
@@ -336,6 +354,7 @@ def study_add(request, pacient_id):
             tas=request.POST.get('tas'),
             tad=request.POST.get('tad'),
             pulse=request.POST.get('pulse'),
+            renal_filter= round(renalFilter,4),
 
             chol_level=None if request.POST.get('chol_level') == '' else request.POST.get('chol_level'),
             hdl_level=None if request.POST.get('hdl_level') == '' else request.POST.get('hdl_level'),
@@ -422,7 +441,8 @@ def export_pdf(request, pacient_id, studies_id):
     if pacient.smoke:
         years = relativedelta(pacient.smoke_quit, pacient.smoke_duration).years
         print(years)
-
+    else:
+        years = 0
     # Patient drawing
     with open(str(studies.photo.path), "rb") as image_file:
         encoded = base64.b64encode(image_file.read())

@@ -18,6 +18,12 @@ class Pacient(models.Model):
     phone = models.IntegerField()
     date_of_birth = models.DateField()
     medical_details = models.CharField(max_length=300)
+    
+    WHITE = 'W'
+    BLACK = 'B'
+    RACE_OPTIONS = ((WHITE, 'white'), (BLACK, 'black'))
+    race = models.CharField(max_length=1, choices=RACE_OPTIONS, null=False, blank=False)
+
     arterial_age = models.FloatField(null=True, blank=True)
 
     smoke = models.BooleanField()
@@ -92,6 +98,9 @@ class Studies(models.Model):
     creat = models.IntegerField()
     tsh = models.IntegerField()
     pcr = models.IntegerField()
+    
+    # Filtrado Glomerular
+    renal_filter = models.FloatField(null=True,blank=True)
 
     comments = models.CharField(max_length=300, null=True, blank=True)
     photo = models.ImageField('Studies photo',upload_to = '', null=True, blank=True)
