@@ -40,12 +40,14 @@
         <input name='pcr'  type="number" placeholder="PCR u (ng/ml)" required=''>
 
       </div>
+      <div style='text-align:center;'>
+        <label>Comentarios:</label><br>
+        <textarea style='background-color: #e0dddd;' rows="4" cols="50" name="comments"></textarea>
+      </div>
       <br>
-        <input name='comments' style='width: 100%;' type="text" placeholder="Comentarios">
-        <br>
-    <div style='width:100%; text-align: center;'>
+    <div style='width:100%; text-align: center; '>
 
-      <div>
+      <div style="margin-left:70px;">
       <canvas id="myCanvas" width="700" height="500" style="border:1.5px solid #000000;">Upgrade your browser</canvas>
 
         <input type="range" id="myRange" name="amountRange" value="1" min="1" max="50" oninput="this.form.amountInput.value=this.value" onclick="lineWidthRange()" style='width: 8px; height: 175px;' orient='vertical'>
@@ -55,8 +57,8 @@
       <script type="text/javascript" src="/static/js/script.js"></script>
       <input type="hidden" id='image_data' name="image_data" value="">
       <div>
-        <input type='number' name='areaderecha' id='areaderecha' placeholder='Area de Placa Derecha' value=''>
         <input type='number' name='areaizquierda' id='areaizquierda' placeholder='Area de Placa Izquierda' value=''>
+        <input type='number' name='areaderecha' id='areaderecha' placeholder='Area de Placa Derecha' value=''>
       </div>
     </div>
 

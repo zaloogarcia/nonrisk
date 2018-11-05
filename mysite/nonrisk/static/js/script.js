@@ -103,13 +103,13 @@ function saveImage() {
     
     ctx.fillText("Área de placa", 50, 383);
     ctx.fillText("Izquierda: ", 50, 405);
-    ctx.fillText( areaizquierda+'(mm²)', 77, 430);
+    ctx.fillText( areaizquierda +'(mm²)', 77, 430);
     ctx.fillText( '___________', 57, 432);
 
 
     ctx.fillText("Área de placa", 460, 380);
-    ctx.fillText("Derecha(mm²):", 460, 400);
-    ctx.fillText(areaizquierda, 487, 425);
+    ctx.fillText("Derecha:", 460, 400);
+    ctx.fillText(areaderecha +'(mm²)', 487, 425);
     ctx.fillText( '___________', 470, 426);
     ctx.stroke();
 

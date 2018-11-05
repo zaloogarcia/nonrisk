@@ -38,7 +38,7 @@
     <table style=' padding 1.36px; font-size:1.05em'>
     <tr>
       <td style='border-right: 1px solid #dddddd;'>
-        <img src="https://raw.githubusercontent.com/zaloogarcia/nonrisk/master/env/mysite/nonrisk/static/images/nonrisk-logo.png">
+        <img src="https://raw.githubusercontent.com/zaloogarcia/nonrisk/master/mysite/nonrisk/static/images/nonrisk-logo.png">
       </th>
       <td>
         <table>
@@ -77,7 +77,7 @@
     {%endif%}
     <hr/>
     <table>
-      <td style='width:400px'>
+      <td style='width:280px'>
         <table style='padding-top:3px; text-align:center; border: 1px solid #dddddd; font-size:1.05em'>
           <tr>
             <th style="background-color: #004C88; color:white;"></th>
@@ -95,9 +95,9 @@
             {%endif%}
           </tr>
           <tr>
-            <th style="background-color: #004C88; color:white;">Antecedentes</th>
-            <th style="background-color: #004C88; color:white;">Tipo</th>
-            <th style="background-color: #004C88; color:white;">Inicio</th>
+            <th style="width:140px; background-color: #004C88; color:white;">Antecedentes</th>
+            <th style="width:65px; background-color: #004C88; color:white;">Tipo</th>
+            <th style="width:75px; background-color: #004C88; color:white;">Inicio</th>
           </tr>
           <tr>
             <td style="background-color: #004C88; color:white;">Diabetes Mellitus</td>
@@ -118,7 +118,7 @@
               <td>{{pacient.hyper_date|date:"Y"}}</td>
             {%endif%}
           </tr>
-              <tr>
+          <tr>
             <td style="background-color: #004C88; color:white;">Dislipidemia</td>
             {%if pacient.dislipidemia == False%}
               <td>No</td>
@@ -194,7 +194,68 @@
           </tr>
         </table>
       </td>
-      <td style='width:750px; padding: 5px'>
+      <td style='text-align: center; margin-left:40px; width:120px; font-size:0.9em'>
+        <p><u>Edad Arterial:</u> {{pacient.arterial_age}}</p>
+          <table style='text-align: center; width:110px; '>
+            <tr>
+              <th style='width: 50px'> vel pico</th>
+              <th style='width: 80px'> porcentaje estenosis</th>
+            </tr>
+            <tr>
+              <td> mm/s</td>
+              <td> % </td>
+            </tr>
+            <tr>
+              <td>150</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td>250</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>400</td>
+              <td>20</td>
+            </tr>
+            <tr>
+              <td>600</td>
+              <td>30</td>
+            </tr>
+            <tr>
+              <td>850</td>
+              <td>40</td>
+            </tr>
+            <tr>
+              <td>1250</td>
+              <td>50</td>
+            </tr>
+            <tr>
+              <td>1700</td>
+              <td>60</td>
+            </tr>
+            <tr>
+              <td>2300</td>
+              <td>70</td>
+            </tr>
+            <tr>
+              <td>2850</td>
+              <td>80</td>
+            </tr>
+            <tr>
+              <td>3000</td>
+              <td>90</td>
+            </tr>
+            <tr>
+              <td>3150</td>
+              <td>95</td>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>100</td>
+            </tr>
+          </table>
+      </td>
+      <td style='width:730px; padding: 12px'>
         <img src="{{photo}}"/>
       </td>
     </table>
@@ -207,129 +268,69 @@
                 <td style="background-color: #004C88; color:white;">Peso (kg):</td>
                 <td>{{studies.weight}}</td>
               <tr>
-                <td style="background-color: #004C88; color:white;">Altura(cm):</td>
+                <td style="background-color: #004C88; color:white;">Altura (cm):</td>
                 <td>{{studies.height}}</td>
               <tr>
-                <td style="background-color: #004C88; color:white;">TAS(mmHg):</td>
+                <td style="background-color: #004C88; color:white;">TAS (mmHg):</td>
                 <td>{{studies.tas}}</td>
               </tr>
               <tr>
-                <td style="background-color: #004C88; color:white;">TAD(mmHg):</td>
+                <td style="background-color: #004C88; color:white;">TAD (mmHg):</td>
                 <td>{{studies.tad}}</td>
               </tr>
               <tr>
-                <td style="background-color: #004C88; color:white;">Pulso(lpm):</td>
+                <td style="background-color: #004C88; color:white;">Pulso (lpm):</td>
                 <td>{{studies.pulse}}</td>
               </tr>
-                <td style="background-color: #004C88; color:white;">Col Total(mg/dl):</td>
+                <td style="background-color: #004C88; color:white;">Col Total (mg/dl):</td>
                 <td>{{studies.chol_level}}</td>
               </tr>
               <tr >
-                <td style="background-color: #004C88; color:white;">Col LDL(mg/dl):</td>
+                <td style="background-color: #004C88; color:white;">Col LDL (mg/dl):</td>
                 <td>{{studies.ldl_level}}</td>
               </tr>
               <tr >
-                <td style="background-color: #004C88; color:white;">HDL(mg/dl):</td>
+                <td style="background-color: #004C88; color:white;">HDL (mg/dl):</td>
                 <td>{{studies.hdl_level}}</td>
               </tr>
               <tr>
-                <td style="background-color: #004C88; color:white;">Triglic(mg/dl):</td>
+                <td style="background-color: #004C88; color:white;">Triglic (mg/dl):</td>
                 <td>{{studies.tri_level}}</td>
               </tr>
               <tr>
-                <td style="background-color: #004C88; color:white;">Creatinina(mg/dl):</td>
+                <td style="background-color: #004C88; color:white;">Creatinina (mg/dl):</td>
                 <td>{{studies.creat}}</td>
               </tr>
               <tr>
-                <td style="background-color: #004C88; color:white;">Filtrado Renal(ml/min):</td>
+                <td style="font-size:0.9em; background-color: #004C88; color:white;">Filtrado Renal(ml/min):</td>
                 <td>{{studies.renal_filter}}</td>
               <tr>
-                <td style="background-color: #004C88; color:white;">Acido Úrico(mg/dl):</td>
+                <td style="background-color: #004C88; color:white;">Acido Úrico (mg/dl):</td>
                 <td>{{studies.ac_uric}}</td>
               </tr>
               <tr>
-                <td style="background-color: #004C88; color:white;">Glucemia(mg/dl):</td>
+                <td style="background-color: #004C88; color:white;">Glucemia (mg/dl):</td>
                 <td>{{studies.glucemia}}</td>
               </tr>
               <tr>
-                <td style="background-color: #004C88; color:white;">HbA1c(%):</td>
+                <td style="background-color: #004C88; color:white;">HbA1c (%):</td>
                 <td>{{studies.hba1c}}</td>
               </tr>
               <tr >
-                <td style="background-color: #004C88; color:white;">PCRu(ng/ml):</td>
+                <td style="background-color: #004C88; color:white;">PCRu (ng/ml):</td>
                 <td>{{studies.pcr}}</td>
               </tr>
               <tr >
-                <td style="background-color: #004C88; color:white;">TSH(mIU/L):</td>
+                <td style="background-color: #004C88; color:white;">TSH (mIU/L):</td>
                 <td>{{studies.tsh}}</td>
               </tr>
             </table>
           </td>
         </table>
       </td>
-      <td style='width:700'>
+      <!-- border-style:solid; border-color:black; border-width:1px; -->
+      <td style='width:810;'>
         <img src="{{graphic}}"/>
-      </td>
-        <td style='text-align: center; width:110px; font-size:0.9em'>
-          <u>Edad Arterial:</u> {{pacient.arterial_age}}
-            <table style='text-align: center; width:110px '>
-              <tr>
-                <th style='width: 50px'> vel pico</th>
-                <th style='width: 80px'> porcentaje estenosis</th>
-              </tr>
-              <tr>
-                <td> mm/s</td>
-                <td> % </td>
-              </tr>
-              <tr>
-                <td>150</td>
-                <td>0</td>
-              </tr>
-              <tr>
-                <td>250</td>
-                <td>10</td>
-              </tr>
-              <tr>
-                <td>400</td>
-                <td>20</td>
-              </tr>
-              <tr>
-                <td>600</td>
-                <td>30</td>
-              </tr>
-              <tr>
-                <td>850</td>
-                <td>40</td>
-              </tr>
-              <tr>
-                <td>1250</td>
-                <td>50</td>
-              </tr>
-              <tr>
-                <td>1700</td>
-                <td>60</td>
-              </tr>
-              <tr>
-                <td>2300</td>
-                <td>70</td>
-              </tr>
-              <tr>
-                <td>2850</td>
-                <td>80</td>
-              </tr>
-              <tr>
-                <td>3000</td>
-                <td>90</td>
-              </tr>
-              <tr>
-                <td>3150</td>
-                <td>95</td>
-              </tr>
-              <tr>
-                <td>0</td>
-                <td>100</td>
-              </tr>
-            </table>
       </td>
     </table>
     <p style='font-size: 1.1;'><b>Comentarios:</b></p>
