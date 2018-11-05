@@ -95,9 +95,9 @@
             {%endif%}
           </tr>
           <tr>
-            <th style="width:140px; background-color: #004C88; color:white;">Antecedentes</th>
-            <th style="width:65px; background-color: #004C88; color:white;">Tipo</th>
-            <th style="width:75px; background-color: #004C88; color:white;">Inicio</th>
+            <th style="width:230px; background-color: #004C88; color:white;">Antecedentes</th>
+            <th style="width:105px; background-color: #004C88; color:white;">Tipo</th>
+            <th style="width:35px; background-color: #004C88; color:white;">Inicio</th>
           </tr>
           <tr>
             <td style="background-color: #004C88; color:white;">Diabetes Mellitus</td>
@@ -106,7 +106,7 @@
               <td>-</td>
             {%else%}
               <td>{{pacient.diabetes_type}}</td>
-              <td>{{pacient.diabetes_date|date:"Y"}}</td>
+              <td style='width:25px;'>{{pacient.diabetes_date|date:"Y"}}</td>
             {%endif%}
           <tr>
             <td style="background-color: #004C88; color:white;">Hipertension Arterial</td>
@@ -114,8 +114,12 @@
               <td>No</td>
               <td>-</td>
             {%else%}
-              <td>{{pacient.hyper_type}}</td>
-              <td>{{pacient.hyper_date|date:"Y"}}</td>
+              {%if pacient.hyper_type == 'Secundaria'%}
+                <td>2ª</td>
+              {%elif pacient.hyper_type == 'Primaria'%}
+                <td>1ª</td>
+              {%endif%}
+            <td>{{pacient.hyper_date|date:"Y"}}</td>
             {%endif%}
           </tr>
           <tr>

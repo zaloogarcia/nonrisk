@@ -68,7 +68,7 @@ def pacients_view(request):
     for pacient in pacients_list:
         ammount_studies = studies_list.filter(pacient_id= pacient.id).count()
         if ammount_studies > 0:
-            last_studies_date = studies_list.filter(pacient_id= pacient.id).order_by('date').first()
+            last_studies_date = studies_list.filter(pacient_id= pacient.id).order_by('date').last()
             last_studies_date = str(last_studies_date.date)
         else:
             ammount_studies = 0
