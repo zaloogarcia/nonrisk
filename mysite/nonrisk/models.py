@@ -24,7 +24,7 @@ class Pacient(models.Model):
     RACE_OPTIONS = ((WHITE, 'white'), (BLACK, 'black'))
     race = models.CharField(max_length=1, choices=RACE_OPTIONS, null=False, blank=False)
 
-    arterial_age = models.FloatField(null=True, blank=True)
+    arterial_age = models.IntegerField(null=True, blank=True)
 
     smoke = models.BooleanField()
     smoke_quantity = models.IntegerField(null=True, blank=True)
@@ -82,7 +82,7 @@ class Studies(models.Model):
     doctor = models.CharField(max_length=300, blank=True, null=True)
 
     weight = models.IntegerField() #in kg
-    height  = models.IntegerField() #in cm
+    height  = models.FloatField() #in m
     tas = models.IntegerField()
     tad = models.IntegerField()
     pulse = models.IntegerField()
@@ -93,14 +93,14 @@ class Studies(models.Model):
     tri_level = models.IntegerField(null=True,blank=True)  #LDL Level
     
     glucemia  = models.IntegerField()
-    hba1c = models.IntegerField()
-    ac_uric = models.IntegerField()
-    creat = models.IntegerField()
-    tsh = models.IntegerField()
-    pcr = models.IntegerField()
+    hba1c = models.FloatField()
+    ac_uric = models.FloatField()
+    creat = models.FloatField()
+    tsh = models.FloatField()
+    pcr = models.FloatField()
     
     # Filtrado Glomerular
-    renal_filter = models.FloatField(null=True,blank=True)
+    renal_filter = models.IntegerField(null=True,blank=True)
 
     comments = models.CharField(max_length=300, null=True, blank=True)
     photo = models.ImageField('Studies photo',upload_to = '', null=True, blank=True)

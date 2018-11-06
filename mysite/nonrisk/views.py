@@ -274,14 +274,10 @@ def study_add(request, pacient_id):
 
         # Graphic chart
         leftarea = request.POST.get('areaizquierda')
-        print(leftarea)
         rightarea = request.POST.get('areaderecha')
-        print(rightarea)
         totalarea = float(leftarea) + float(rightarea)
         age = ageFromDate(pacient.date_of_birth)
 
-        print('edad ' + str(age))
-        print('area total ' + str(totalarea))
         xlabel('Edad')
         ylabel('Area total de Ateroclerosis(mm²)')
         title('Promedio de Area de Placa por Edad/Sexo')
@@ -327,7 +323,7 @@ def study_add(request, pacient_id):
         scr = float(request.POST.get('creat'))
         renalFilter = 0
         if pacient.sex == 'M' :
-            arterialAge = round(((math.log(totalarea/5.4175))/0.0426),4)
+            arterialAge = round(((math.log(totalarea/5.4175))/0.0426))
             
             if pacient.race == 'B': #Black
                 renalFilter = 141 * (min((scr/ 0.9), 1)**(-0.411))* (max(scr/0.9, 1)**(-1.209))* (0.993 ** float(age)) * 1.159
@@ -339,7 +335,7 @@ def study_add(request, pacient_id):
             if pacient.race == 'B':
                 renalFilter = 141 * (min((scr/ 0.7), 1)**(-0.329))* (max(scr/0.9, 1)**(-1.209))* (0.993 ** float(age)) *1.018 * 1.159
             elif pacient.race == 'W':
-                renalFilter = 141 * (min((scr/ 0.9), 1)**(-0.329))* (max(scr/0.9, 1)**(-1.209))* (0.993 ** float(age)) * 1.018
+                renalFilter = 141 * (min((scr/ 0.9), 1)**(-0.329))* (max(scr/0.9, 1)**(-1.209))* (0.993 ** float(age)) * 1.018 
 
         Pacient.objects.filter(id=pacient_id).update(arterial_age= arterialAge)
 
@@ -354,7 +350,7 @@ def study_add(request, pacient_id):
             tas=request.POST.get('tas'),
             tad=request.POST.get('tad'),
             pulse=request.POST.get('pulse'),
-            renal_filter= round(renalFilter,4),
+            renal_filter= round(renalFilter),
 
             chol_level=None if request.POST.get('chol_level') == '' else request.POST.get('chol_level'),
             hdl_level=None if request.POST.get('hdl_level') == '' else request.POST.get('hdl_level'),
@@ -463,7 +459,9 @@ def export_pdf(request, pacient_id, studies_id):
     response = BytesIO()
     pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), response)
     if not pdf.err:
-        return HttpResponse(response.getvalue(), content_type='application/pdf')
+        response = HttpResponse(response.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=Estudio.pdf'
+        return response
     else:
         return HttpResponse("Error Rendering PDF", status=400)
 

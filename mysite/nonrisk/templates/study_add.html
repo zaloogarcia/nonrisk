@@ -16,7 +16,7 @@
       </div>
       <div class='box-33-study'>
         <input name='weight'type="number" placeholder=" Peso(kg) ">
-        <input name='height' type="number" placeholder=" Altura(cm)" required=''>
+        <input name='height' type="number" placeholder=" Altura(mts)" min='0.60' max='2.40' required='' step='.01'>
         <input name='tas'  type="number" placeholder="TAS (mmHg)" required=''>
         <input name='tad'  type="number" placeholder="TAD (mmHg)" required=''>
         <input name='pulse' type="number" placeholder="Pulso (lpm)" required=''>
@@ -28,16 +28,16 @@
         <input name='hdl_level' type="number" placeholder="HLD (mg/dl)">
         <input name='ldl_level' type="number" placeholder="LDL (mg/dl)">
         <input name='tri_level' type="number" placeholder="Triglic(mg/dl)">
-        <input name='glucemia' type="number" placeholder="GLucemia (mg/dl)">
+        <input name='glucemia' type="number" min='20' max='500' placeholder="GLucemia (mg/dl)">
       </div>
       
       <div class='box-33-study'>
 
-        <input name='hba1c' type="number" placeholder="HbA1c (%)" required=''>
-        <input name='ac_uric'  type="number" placeholder="Acido Urico (mg/dl)" required=''>
-        <input name='creat'  type="number" placeholder="Creat (mg/dl)" required=''>
-        <input name='tsh'  type="number" placeholder="TSH (mIu/L)" required=''>
-        <input name='pcr'  type="number" placeholder="PCR u (ng/ml)" required=''>
+        <input name='hba1c' type="number" min='2.0' max='20.0' step='.1' placeholder="HbA1c (%)" required=''>
+        <input name='ac_uric' type="number" min='2.0' max='20.0' step='.1' placeholder="Acido Urico (mg/dl)" required=''>
+        <input name='creat' type="number" min='0.3' max='15'step='.01' placeholder="Creat (mg/dl)" required=''>
+        <input name='tsh' type="number" min='0.01' max='20' step='.01' placeholder="TSH (uUI/ml)" required=''>
+        <input name='pcr' type="number" min='1.0' max='20.0' step='.1' placeholder="PCR u (ng/ml)" required=''>
 
       </div>
       <div style='text-align:center;'>
