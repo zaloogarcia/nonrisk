@@ -1,4 +1,3 @@
-from django.core import serializers
 import re
 import math
 import base64
@@ -13,25 +12,26 @@ from matplotlib import pylab
 from pylab import *
 from django.http import *
 from nonrisk.forms import *
-import xhtml2pdf.pisa as pisa
 from nonrisk.models import *
-from datetime import date
-from datetime import datetime
+import xhtml2pdf.pisa as pisa
+from datetime import date, datetime
 from django.template import loader
+from weasyprint import HTML, CSS
 from reportlab.pdfgen import canvas
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from django.db import IntegrityError
 from django.views.generic import View
 from django.forms.models import model_to_dict
-from django.shortcuts import render, redirect
-from django.core.files.base import ContentFile
+from django.shortcuts import render, redirect, get_list_or_404, get_object_or_404
 from dateutil.relativedelta import relativedelta
 from django.template.loader import get_template
 from django.template.defaulttags import register
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_list_or_404, get_object_or_404
+from django.core import serializers
+from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
+
 
 # NEED TO INSTALL: - PILLOW
 #                  - PDFKIT
@@ -39,7 +39,9 @@ from django.core.files.images import ImageFile
 #                  - xhtml2pdf
 #                  - matplotlib
 #                  -sudo apt-get install python3-tk
+#                  -sudo apt-get install libcairo2-dev
 #                  -django-cleanup
+#                  -weasyprint
 
 
 def RepresentsInt(s):
@@ -430,13 +432,12 @@ def study_delete(request, studies_id, pacient_id):
 
 @login_required
 def export_pdf(request, pacient_id, studies_id):
-    template = get_template('pdf.html')
+    template = get_template('pdf2.html')
     pacient = Pacient.objects.filter(id = pacient_id) [:1].get()
     studies = Studies.objects.filter(id = studies_id) [:1].get()
 
     if pacient.smoke:
         years = relativedelta(pacient.smoke_quit, pacient.smoke_duration).years
-        print(years)
     else:
         years = 0
     # Patient drawing
@@ -456,13 +457,15 @@ def export_pdf(request, pacient_id, studies_id):
                'graphic': url_graphic, 'smoke_years': years}
 
     html = template.render(context)
-    response = BytesIO()
-    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), response)
-    if not pdf.err:
-        response = HttpResponse(response.getvalue(), content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename=Estudio.pdf'
-        return response
-    else:
-        return HttpResponse("Error Rendering PDF", status=400)
+    # response = BytesIO()
+    # pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), response)
+    pdf = HTML(string=html).write_pdf(presentational_hints=True)
+    # if not pdf.err:
+        # response = HttpResponse(response.get_value(), content_type='application/pdf')
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=Estudio.pdf'
+    return response
+    # else:
+        # return HttpResponse("Error Rendering PDF", status=400)
 
 

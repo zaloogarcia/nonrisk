@@ -9,7 +9,7 @@
   <p>Edad Arterial: {{pacient.arterial_age}}</p>
   <p>Filtrado Renal: {{study.renal_filter}}</p><br>
   </div>
-  <div class='box-33' style='padding:0px; float:left;'>
+  <div class='box-33' style='width:33% padding:0px; float:left;'>
     <table>
       <tr>
         <td style="background: #4A97D4; color:white;">Peso (kg): </td><td>{{study.weight}}</td>
@@ -28,7 +28,7 @@
       </tr>
     </table>
   </div>
-  <div class='box-33' style='width:36%'>
+  <div style='width:33%'  class='box-33'>
     <table>
       <tr>
         <td style="background: #4A97D4; color:white;">Col Total (mg/dl): </td><td> {{study.chol_level}}</td>
@@ -47,7 +47,7 @@
       </tr>
     </table>
   </div>
-  <div class='box-33'>
+  <div style='width:33%' class='box-33'>
     <table>
       <tr>
       <td style="background: #4A97D4; color:white;">HbA1c(%): </td><td> {{study.hba1c}}</td>
@@ -68,8 +68,12 @@
   </div>
   <div>
     {% if study.photo %}
-    <img src="{{study.photo.url}}" alt="img">
-    <img src="{{study.graphic.url}}" alt="img">
+    <div style='width:49%; float:right; display:inline;'>
+      <img src="{{study.graphic.url}}" alt="img">
+    </div>
+    <div style='width:49%; float:left; display:inline;'>
+      <img src="{{study.photo.url}}" alt="img">
+    </div>
 
     {% endif %}
   </div>

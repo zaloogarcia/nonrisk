@@ -25,7 +25,7 @@ SECRET_KEY = 'gd*$&_due2f2but$r%$*7795)%*s$cnx)3mmv7o46zdf5lc)!='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['nonrisk.georgealegre.com']
+ALLOWED_HOSTS = ['nonrisk.georgealegre.com', '127.0.0.1']
 
 
 # Application definition

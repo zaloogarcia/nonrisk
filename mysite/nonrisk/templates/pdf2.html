@@ -1,0 +1,390 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style type="text/css">
+      @charset "UTF-8";
+      @import url("https://fonts.googleapis.com/css?family=Pacifico|Source+Sans+Pro:400,700");
+      @page {
+        margin: 1cm;
+        margin-top: 0.4cm;
+        margin-left: 0.9cm;
+
+        @bottom-left {
+          color: black;
+          content: 'NonRisk S.A'; }
+        @bottom-right {
+          content: 'Firma ___________________________';
+          font-size: 10pt; } }
+
+      html {
+        color: #14213d;
+        font-family: Source Sans Pro;
+        font-size: 11pt;
+        line-height: 1.6; }
+        html body {
+          margin: 0; }
+        html h1 {
+          color: #1ee494;
+          font-family: Pacifico;
+          font-size: 40pt;
+          margin: 0; }
+        html div#logo{
+          width: 200px;
+          height: 200px;
+          display: flex;
+        }
+        html aside {
+          display: flex;
+         }
+          html aside address {
+            font-style: normal;
+            white-space: pre-line; }
+            html aside address#from {
+              color: #a9a;
+              flex: 1; }
+            html aside address#to {
+              text-align: right; }
+        html ul li{
+        text-align: right;
+        display: inline;
+        }
+        html dl {
+          text-align: right;
+          position: absolute;
+          right: 0;
+          top: 0; }
+          html dl dt, html dl dd {
+            display: inline;
+            margin: 0; }
+          html dl dt {
+            color: #a9a; }
+            html dl dt::before {
+              content: '';
+              display: block; }
+            html dl dt::after {
+              content: ':'; }
+        html hr{
+          padding: 0px;
+          margin: 0px;
+          border-color: #a9a;  
+        }
+        html table#tabla-grafico {
+          width: 30px;
+          text-align: center;
+          font-size:0.7em;
+          border-collapse: collapse;
+          vertical-align: top;
+          border-spacing: 0; 
+        }
+        html table#patient-data{
+          text-align: center;
+          font-size:0.8em;
+          border-collapse: collapse;
+          vertical-align: top;
+          border-spacing: 1; 
+        }
+        html article{
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-evenly;
+        }
+/*        html table {
+          border-collapse: collapse;
+          width: 100%; }
+          html table th {
+            border-bottom: .2mm solid #a9a;
+            color: #a9a;
+          }
+          html table td:last-of-type {
+              color: #1ee494;
+              font-weight: bold;
+              text-align: right; }
+          html table th, html table td {
+            text-align: center; }
+            html table th:first-of-type, html table td:first-of-type {
+              text-align: left; }
+            html table th:last-of-type, html table td:last-of-type {
+              text-align: right; }
+          html table#total {
+           
+            border-color: #f6f6f6;
+            border-style: solid;
+            border-width: 2cm 3cm;
+            bottom: 0;
+            font-size: 20pt;
+            margin: 0 -3cm;
+            position: absolute;
+            width: 18cm; }*/
+          html p#comentarios{
+           
+            border-color: #f6f6f6;
+            border-style: solid;
+          }
+
+    </style>
+</head>
+<body>
+  <aside>
+    <img style='width: 300px; filter: grayscale(100%);border-right:1px solid #f6f6f6;' src="https://raw.githubusercontent.com/zaloogarcia/nonrisk/master/mysite/nonrisk/static/images/nonrisk-logo.png">
+  </aside>
+
+  <dl style='height: 20px;' id="information">
+    <ul>
+      <li style='color: #a9a;'>Nombre Completo:</li>
+      <li style='padding-right: 10px;'>{{pacient.name}} {{pacient.name_second}} {{pacient.name_last}}</li>
+      <li style='color: #a9a;'>Domicilio:</li>
+      <li style='padding-right: 10px;'>{{pacient.address}}</li>
+    </ul>
+    <ul>
+      <li style='color: #a9a;'>DNI:</li>
+      <li style='padding-right: 10px;'> {{pacient.id}} </li>
+      <li style='color: #a9a;'>Telefono:</li>
+      <li style='padding-right: 10px;'>{{pacient.phone}}</li>
+      <li style='color: #a9a;'>Doctor:</li>
+      <li> {{studies.doctor}} </li>
+    </ul>
+    <ul>
+      <li style='color: #a9a;'>Sexo:</li>
+      {%if pacient.sex == 'F'%}
+      <li style='padding-right: 10px;'> Femenino </li>
+      {% else %}
+      <li style='padding-right: 10px;'> Masculino </li>
+      {%endif%}
+      <li style='color: #a9a;'>Nacimiento</li>
+      <li style='padding-right: 10px;'>{{pacient.date_of_birth|date:"d"}}/{{pacient.date_of_birth|date:'m'}}/{{pacient.date_of_birth|date:"Y"}}</li>
+    </ul>
+  </dl>
+
+  {%if pacient.medical_details == 'None'%}
+    <p id='comentarios' style='background: #f6f6f6;font-size: 1; padding: 0px; margin: 0px;'> <b>Antecedentes personales patológicos - Medicación concomitante:</b> Ninguno</p>
+  {%else%}
+    <p id='comentarios' style='background: #f6f6f6;font-size: 1; padding: 0px; margin: 0px;'> <b>Antecedentes personales patológicos - Medicación concomitante:</b> {{pacient.medical_details}}</p>
+  {%endif%}
+  <hr>
+  <article>
+    <section>
+      <img style='width:452px; margin-left:0px;' src="{{photo}}"/>
+    </section>
+    <section style=' width:85px;'>
+      <table style='width:19%; border: 1px solid black; margin:4px; margin-top:12px;' id='tabla-grafico'>
+        <tr>
+          <th>vel pico</th>
+          <th> porcentaje estenosis</th>
+        </tr>
+        <tr><td> mm/s</td><td> % </td></tr>
+        <tr><td>150 </td><td>0</td></tr>
+        <tr><td>250 </td><td>10</td></tr>
+        <tr><td>400 </td><td>20</td></tr>
+        <tr><td>600 </td><td>30</td></tr>
+        <tr><td>850 </td><td>40</td></tr>
+        <tr><td>1250</td><td>50</td></tr>
+        <tr><td>1700</td><td>60</td></tr>
+        <tr><td>2300</td><td>70</td></tr>
+        <tr><td>2850</td><td>80</td></tr>
+        <tr><td>3000</td><td>90</td></tr>
+        <tr><td>3150</td><td>95</td></tr>
+        <tr><td>0</td><td>100</td></tr>
+      </table>
+    </section>
+    <section style=''>
+      <p style='text-align: center; font-size:0.9em'>Edad Arterial: {{pacient.arterial_age}}</p>
+      <table id='patient-data' style='text-align:center; border: 1px solid #dddddd; font-size:0.85em; padding:1px;'>
+        <tr>
+          <th style="background-color: #404040; color:white;">Adicciones</th>
+          <th style="background-color: #404040; color:white;"> Años </th>
+          <th style="background-color: #404040; color:white;">Cantidad</th>
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;">Tabaquismo</td>
+          {%if pacient.smoke == True%}
+            <td>{{smoke_years}}</td>
+            <td >{{pacient.smoke_quantity}}</td>
+          {%else%}
+           <td>-</td>
+           <td>-</td>
+          {%endif%}
+        </tr>
+        <tr>
+          <th style="background-color: #404040; color:white;">Antecedentes</th>
+          <th style="background-color: #404040; color:white;">Tipo</th>
+          <th style="background-color: #404040; color:white;">Inicio</th>
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;">Diabetes Mellitus</td>
+          {%if pacient.diabetes == False%}
+            <td> No </td>
+            <td>-</td>
+          {%else%}
+            <td>{{pacient.diabetes_type}}</td>
+            <td>{{pacient.diabetes_date|date:"Y"}}</td>
+          {%endif%}
+        <tr>
+          <td style="background-color: #404040; color:white;">Hipertension Arterial</td>
+          {%if pacient.hyper == False%}
+            <td>No</td>
+            <td>-</td>
+          {%else%}
+            {%if pacient.hyper_type == 'Secundaria'%}
+              <td>2ª</td>
+            {%elif pacient.hyper_type == 'Primaria'%}
+              <td>1ª</td>
+            {%endif%}
+          <td>{{pacient.hyper_date|date:"Y"}}</td>
+          {%endif%}
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;">Dislipidemia</td>
+          {%if pacient.dislipidemia == False%}
+            <td>No</td>
+            <td>-</td>
+          {%else%}
+            <td>{{pacient.dislipidemia_type}}</td>
+            <td>{{pacient.dislipidemia_date|date:"Y"}}</td>
+          {%endif%}
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;"> IRC</td>
+          {%if pacient.irc == False%}
+            <td>No</td>
+            <td>-</td>
+          {%else%}
+            <td>{{pacient.irc_type}}</td>
+            <td>{{pacient.irc_date|date:"Y"}}</td>
+          {%endif%}
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;"> IAM</td>
+          {%if pacient.iam == True%}
+            <td>Si</td>
+          {%else%}
+            <td>No</td>
+          {%endif%}
+          <td>-</td>
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;"> ACV</td>
+          {%if pacient.acv == True%}
+            <td>Si</td>
+          {%else%}
+            <td>No</td>
+          {%endif%}
+          <td>-</td>
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;"> Revasc</td>
+          {%if pacient.revasc == True%}
+            <td>Si</td>
+          {%else%}
+            <td>No</td>
+          {%endif%}
+          <td>-</td>
+        </tr>
+        <tr> 
+          <td style="background-color: #404040; color:white;"> ENFVP</td>
+          {%if pacient.enfvp == True%}
+            <td>Si</td>
+          {%else%}
+            <td>No</td>
+          {%endif%}
+          <td>-</td>
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;"> ACV AIT</td>
+          {%if pacient.acv_ait == True%}
+            <td>Si</td>
+          {%else%}
+            <td>No</td>
+          {%endif%}
+          <td>-</td>
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;"> FECVT</td>
+          {%if pacient.fecvt == True%}
+            <td>Si</td>
+          {%else%}
+            <td>No</td>
+          {%endif%}
+          <td>-</td>
+        </tr>
+      </table>
+    </section>
+  </article>
+  <hr>
+  <article style=''>
+    <section>
+      <table id='patient-data' style='width:100%;border: 1px solid #dddddd; padding:2px;'>
+        <tr>
+          <td style="background-color: #404040; color:white;">Peso (kg):</td>
+          <td>{{studies.weight}}</td>
+        <tr>
+          <td style="background-color: #404040; color:white;">Altura (cm):</td>
+          <td>{{studies.height}}</td>
+        <tr>
+          <td style="background-color: #404040; color:white;">TAS (mmHg):</td>
+          <td>{{studies.tas}}</td>
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;">TAD (mmHg):</td>
+          <td>{{studies.tad}}</td>
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;">Pulso (lpm):</td>
+          <td>{{studies.pulse}}</td>
+        </tr>
+          <td style="background-color: #404040; color:white;">Col Total (mg/dl):</td>
+          <td>{{studies.chol_level}}</td>
+        </tr>
+        <tr >
+          <td style="background-color: #404040; color:white;">Col LDL (mg/dl):</td>
+          <td>{{studies.ldl_level}}</td>
+        </tr>
+        <tr >
+          <td style="background-color: #404040; color:white;">HDL (mg/dl):</td>
+          <td>{{studies.hdl_level}}</td>
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;">Triglic (mg/dl):</td>
+          <td>{{studies.tri_level}}</td>
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;">Creatinina (mg/dl):</td>
+          <td>{{studies.creat}}</td>
+        </tr>
+        <tr>
+          <td style="font-size:0.9em; background-color: #404040; color:white;">Filtrado Renal(ml/min):</td>
+          <td>{{studies.renal_filter}}</td>
+        <tr>
+          <td style="background-color: #404040; color:white;">Acido Úrico (mg/dl):</td>
+          <td>{{studies.ac_uric}}</td>
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;">Glucemia (mg/dl):</td>
+          <td>{{studies.glucemia}}</td>
+        </tr>
+        <tr>
+          <td style="background-color: #404040; color:white;">HbA1c (%):</td>
+          <td>{{studies.hba1c}}</td>
+        </tr>
+        <tr >
+          <td style="background-color: #404040; color:white;">PCRu (ng/ml):</td>
+          <td>{{studies.pcr}}</td>
+        </tr>
+        <tr >
+          <td style="background-color: #404040; color:white;">TSH (uUI/ml):</td>
+          <td>{{studies.tsh}}</td>
+        </tr>
+      </table>
+    </section>
+    <section>
+      <img style='width:452px;'src="{{graphic}}"/>
+    </section>
+  </article>
+    <table>
+  <hr>
+  <section style='background: #f6f6f6;'>
+  <p style='font-size: 1.1;'><b>Comentarios:</b></p>
+  <p stle='font-size:1em'>{{studies.comments}}</p>
+  </section>
+</body>
+</html>
