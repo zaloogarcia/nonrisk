@@ -21,6 +21,10 @@
             margin: 1em 0;
             padding: 0;
         }
+        ul li{
+        text-align: right;
+        display: inline;
+        }
 
         @font-face {
            font-family: DejaMono;
@@ -41,37 +45,40 @@
         <img src="https://raw.githubusercontent.com/zaloogarcia/nonrisk/master/mysite/nonrisk/static/images/nonrisk-logo.png">
       </th>
       <td>
-        <table>
-          <tr>
-            <td><b>Nombre Completo:</b></td>
-            <td><u> {{pacient.name}} {{pacient.name_second}} {{pacient.name_last}}</u></td>
-          </tr>
-          <tr>
-            {%if pacient.sex == 'F'%}
-            <td><b>Sexo:</b><u>Femenino</u></td>
-            {% else %}
-            <td><b>Sexo:</b><u>Masculino</u></td>
-            {%endif%}
-            <td><b>Domicilio:</b> <u>{{pacient.address}}</u></td>
-          </tr>
-          </table>
-          <table>
-          <tr>
-            <td><b>Nacimiento:</b> {{pacient.date_of_birth|date:"d"}}/{{pacient.date_of_birth|date:'m'}}/{{pacient.date_of_birth|date:"Y"}}</td>
-            <td style=''><b>DNI:</b> <u>{{pacient.id}}</u></td>
-          </tr>
-          <tr>
-            <td><b> Nº Teléfono:</b><u> {{pacient.phone}}</u></td>
-            <td><b>Doctor: </b><u>{{studies.doctor}}</u></td>
-          </tr>
-          </td>
-        </table>
+          <dl style='height: 20px' id="information">
+  <ul>
+    <li style='color: #a9a;'>Nombre Completo:</li>
+    <li style='padding-right: 10px;'>{{pacient.name}} {{pacient.name_second}} {{pacient.name_last}}</li>
+    <li style='color: #a9a;'>Domicilio:</li>
+    <li style='padding-right: 10px;'>{{pacient.address}}</li>
+  </ul>
+  <ul>
+    <li style='color: #a9a;'>Sexo:</li>
+    {%if pacient.sex == 'F'%}
+    <li style='padding-right: 10px;'> Femenino </li>
+    {% else %}
+    <li style='padding-right: 10px;'> Masculino </li>
+    {%endif%}
+    <li style='color: #a9a;'>Nacimiento</li>
+    <li style='padding-right: 10px;'>{{pacient.date_of_birth|date:"d"}}/{{pacient.date_of_birth|date:'m'}}/{{pacient.date_of_birth|date:"Y"}}</li>
+  <ul>
+  </ul>
+  <ul>
+    <li style='color: #a9a;'>DNI:</li>
+    <li> {{pacient.id}} </li>
+    <li style='color: #a9a;'>Telefono:</li>
+    <li style='padding-right: 10px;'>{{pacient.phone}}</li>
+    <li style='color: #a9a;'>Doctor:</li>
+    <li> {{studies.doctor}} </li>
+
+  </ul>
+  </dl>
       </td>
     </tr>
     </table>
     <hr/>
     {%if pacient.medical_details == 'None'%}
-    <p style='font-size: 1.3;'> Antecedentes personales patológicos - Medicación concomitante: ninguno</p>
+    <p style='font-size: 1.3;'> Antecedentes personales patológicos - Medicación concomitante: Ninguno</p>
     {%else%}
     <p style='font-size: 1.3;'> Antecedentes personales patológicos - Medicación concomitante: {{pacient.medical_details}}</p>
     {%endif%}
