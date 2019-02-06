@@ -3,7 +3,7 @@
 {% load static %}
 <div class="container-list">
   <body>
-    {% if pacients_list %}
+    {% if patient_list %}
       <table style="width:100%; top: 0;">
         <tr>
           <th>Nombre</th>
@@ -13,20 +13,20 @@
         </tr>
 
 
-    {% for pacient in pacients_list %}
+    {% for patient in patient_list %}
       <tr>
         <td style='text-align: left'>
-          <a class=" "href="/pacient/{{ pacient.id }}"> {{ pacient.name}} {{pacient.name_middle}} {{pacient.name_last}}
+          <a class=" "href="/patient/{{ patient.id }}"> {{ patient.name}} {{patient.name_middle}} {{patient.name_last}}
           </a>
         </td>
-        <td>{{pacient.id}}</td>
-        <td>{{ammount_studies|get_item:pacient.id}}</td>
-        <td>{{last_studies_date|get_item:pacient.id}}</td>
+        <td>{{patient.id}}</td>
+        <td>{{ammount_studies|get_item:patient.id}}</td>
+        <td>{{last_studies_date|get_item:patient.id}}</td>
       </tr>
     {% endfor %}
       </table>
     {% else %}
-      <p>No hay pacientes.</p>
+      <p>No hay patientes con esa busqueda.</p>
     {% endif %}
   </body>
 </div>

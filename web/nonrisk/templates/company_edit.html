@@ -1,0 +1,23 @@
+{% extends 'navbar.html' %}
+{% block content %}
+{% load static %}
+<form method='POST' enctype="multipart/form-data" action='{% url 'company_edit' company.id%}'>
+  {% csrf_token %}
+  
+  <div class="container-list">
+    <div style='margin-right:80%;'> <h4>Editar {{company.name}}</h4></div><br>
+    <div>
+      <label for='inputName' >Nombre Entidad:</label>
+      <input id='inputName' name='name' type="text" value='{{company.name}}' >
+    </div>
+    <!-- <div>
+      <label for='logo' >Logo:</label>
+      <input id="logo" type="file" name='logo'> 
+    </div> -->
+  </div>
+</form>
+
+
+{% endblock %}
+
+

@@ -1,0 +1,32 @@
+{% extends 'navbar.html' %}
+{% block content %}
+{% load static %}
+<div class="container-list">
+  <body>
+    {% if companies_list %}
+      <table style="width:100%; top: 0;">
+        <tr>
+          <th>Entidad</th>
+          <th>Cantidad de Pacientes</th>
+
+        </tr>
+
+
+    {% for company in companies_list %}
+      <tr>
+        <td style='text-align: center'>
+            <a class=" "href="{% url 'company_view' company.id %}"> 
+              <img src="{{company.logo.url}}"width="150px" alt="img">
+            </a>
+          </td>
+          <td style='text-align: center'>{{ammount_patients|get_item:company.id}}</td>
+      </tr>
+    {% endfor %}
+      </table>
+    {% else %}
+    <br>
+      <p>No hay Entidades.</p>
+    {% endif %}
+  </body>
+</div>
+{% endblock %}

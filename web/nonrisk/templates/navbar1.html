@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Estudios de {{patient.name}}</title>
+    <title>Patients</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->  
@@ -30,20 +30,20 @@
 <body>
   <div class="limiter">
     <div class="wrap-navbar">
-      <div class='hover-edit'>
+      <div class='hover-edit' style="padding-left: 5px; padding-right: 5px;">
         <a href='/'>Home</a>
       </div>
       <div class='hover-logout'>
-        <a href="{% url 'patient_view' company.id patient.id %}">Volver al paciente</a>
-        <a href='{% url 'study_add' company.id patient.id%}'>Agregar Estudio</a>
-        <a href="{% url 'study_edit' company.id patient.id study.id %}"> Editar Estudio</a>
+        <a href="{% url 'companies_view' %}">Volver </a>
+        <a href="{% url 'patient_add' company.id %}">Agregar Paciente</a>
+        <a href="{% url 'company_edit' company.id %}">Editar Entidad</a>
       </div>
       <div class='hover-delete'>
-        <a href='/accounts/logout'  style="float: right;">Log out</a>
         <a onclick="return confirm('Estas Seguro?');" 
-        href="{% url 'study_delete' company.id patient.id study.id %}">Eliminar Estudio</a>
-      </div>
-      <form  method='POST' action="{% url 'patient_search'%}" style="float: right;">
+            href="{% url 'company_delete' company.id %}">Eliminar {{company.name}}</a>
+        <a href='/accounts/logout'  style="float: right;">Log out</a>
+        </div>
+      <form  method='POST' action="{% url 'patient_search' %}" style="float: right;">
         {% csrf_token %}
         <input type="text" placeholder="Search.." name="data">
         <button type="submit"><i class="fa fa-search"></i></button>
@@ -51,7 +51,7 @@
   </div>
 </div>
 {% block content %}
+
 {% endblock %}
 </body>
-
 </html>

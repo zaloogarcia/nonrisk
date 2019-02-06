@@ -1,9 +1,25 @@
 from __future__ import unicode_literals
+import os, datetime, uuid
+import __future__
 from django.db import models
-import datetime
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.utils.translation import ugettext_lazy as _
 
-class Pacient(models.Model):
+
+
+
+
+class Company(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50, null=False, blank=False)
+    logo = models.ImageField('Logo Photo', upload_to='', null=True, blank=True)
+    def __str__(self):
+        return self.name
+
+
+class Patient(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
     id = models.IntegerField(primary_key=True) #DNI
 
     MALE = 'M'
@@ -76,36 +92,72 @@ class Pacient(models.Model):
         return self.name
 
 class Studies(models.Model):
-    pacient = models.ForeignKey(Pacient, on_delete=models.CASCADE)
-    id = models.AutoField(primary_key=True)
-    date = models.DateField()
-    doctor = models.CharField(max_length=300, blank=True, null=True)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    id      = models.AutoField(primary_key=True)
+    date    = models.DateField()
+    doctor  = models.CharField(max_length=300, blank=True, null=True)
 
-    weight = models.IntegerField() #in kg
-    height  = models.FloatField() #in m
-    tas = models.IntegerField()
-    tad = models.IntegerField()
-    pulse = models.IntegerField()
+    weight = models.IntegerField() # in kg
+    height = models.FloatField()   # in m
+    tas    = models.IntegerField()
+    tad    = models.IntegerField()
+    pulse  = models.IntegerField()
 
     chol_level = models.IntegerField(null=True,blank=True) #Chol Level
-    hdl_level = models.IntegerField(null=True,blank=True)  #TRI Level
-    ldl_level = models.IntegerField(null=True,blank=True)  #HDL Level
-    tri_level = models.IntegerField(null=True,blank=True)  #LDL Level
+    hdl_level  = models.IntegerField(null=True,blank=True) #TRI Level
+    ldl_level  = models.IntegerField(null=True,blank=True) #HDL Level
+    tri_level  = models.IntegerField(null=True,blank=True) #LDL Level
     
     glucemia  = models.IntegerField()
-    hba1c = models.FloatField()
-    ac_uric = models.FloatField()
-    creat = models.FloatField()
-    tsh = models.FloatField()
-    pcr = models.FloatField()
+    hba1c     = models.FloatField()
+    ac_uric   = models.FloatField()
+    creat     = models.FloatField()
+    tsh       = models.FloatField()
+    pcr       = models.FloatField()
     
-    # Filtrado Glomerular
     renal_filter = models.IntegerField(null=True,blank=True)
 
     comments = models.CharField(max_length=300, null=True, blank=True)
-    photo = models.ImageField('Studies photo',upload_to = '', null=True, blank=True)
-    graphic = models.ImageField('Graphic photo', upload_to = '', null = True, blank=True)
+    photo    = models.ImageField('Studies photo',upload_to = '', null=True, blank=True)
+    graphic  = models.ImageField('Graphic photo', upload_to = '', null = True, blank=True)
 
+
+    
     def __str__(self):
         name = str(self.id)
         return name
+
+# These two auto-delete files from filesystem when they are unneeded:
+
+@receiver(models.signals.post_delete, sender=Studies)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `Studies` object is deleted.
+    """
+    if instance.photo:
+        if os.path.isfile(instance.photo.path):
+            os.remove(instance.photo.path)
+    if instance.graphic:
+        if os.path.isfile(instance.graphic.path):
+            os.remove(instance.graphic.path)
+
+@receiver(models.signals.pre_save, sender=Studies)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    """
+    Deletes old file from filesystem
+    when corresponding `Studies` object is updated
+    with new file.
+    """
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = MediaFile.objects.get(pk=instance.pk).file
+    except MediaFile.DoesNotExist:
+        return False
+
+    new_file = instance.file
+    if not old_file == new_file:
+        if os.path.isfile(old_file.path):
+            os.remove(old_file.path)

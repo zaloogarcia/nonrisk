@@ -126,40 +126,42 @@
 </head>
 <body>
   <aside>
-    <img style='width: 300px; object-fit:contain;border-right:1px solid #f6f6f6;' src="https://raw.githubusercontent.com/zaloogarcia/nonrisk/master/mysite/nonrisk/static/images/nonrisk-logo.png">
+      <img style='width:200px; margin-left:0px;' src="{{logo}}"/>
   </aside>
 
   <dl style='height: 20px;' id="information">
     <ul>
       <li style='color: #a9a;'>Nombre Completo:</li>
-      <li style='padding-right: 10px;'>{{pacient.name}} {{pacient.name_second}} {{pacient.name_last}}</li>
+      <li style='padding-right: 10px;'>{{patient.name}} {{patient.name_second}} {{patient.name_last}}</li>
+    </ul>
+    <ul>
       <li style='color: #a9a;'>Domicilio:</li>
-      <li style='padding-right: 10px;'>{{pacient.address}}</li>
+      <li style='padding-right: 10px;'>{{patient.address}}</li>
     </ul>
     <ul>
       <li style='color: #a9a;'>DNI:</li>
-      <li style='padding-right: 10px;'> {{pacient.id}} </li>
+      <li style='padding-right: 10px;'> {{patient.id}} </li>
       <li style='color: #a9a;'>Telefono:</li>
-      <li style='padding-right: 10px;'>{{pacient.phone}}</li>
+      <li style='padding-right: 10px;'>{{patient.phone}}</li>
       <li style='color: #a9a;'>Doctor:</li>
       <li> {{studies.doctor}} </li>
     </ul>
     <ul>
       <li style='color: #a9a;'>Sexo:</li>
-      {%if pacient.sex == 'F'%}
+      {%if patient.sex == 'F'%}
       <li style='padding-right: 10px;'> Femenino </li>
       {% else %}
       <li style='padding-right: 10px;'> Masculino </li>
       {%endif%}
       <li style='color: #a9a;'>Nacimiento</li>
-      <li style='padding-right: 10px;'>{{pacient.date_of_birth|date:"d"}}/{{pacient.date_of_birth|date:'m'}}/{{pacient.date_of_birth|date:"Y"}}</li>
+      <li style='padding-right: 10px;'>{{patient.date_of_birth|date:"d/m/Y"}}</li>
     </ul>
   </dl>
 
-  {%if pacient.medical_details == 'None'%}
+  {%if patient.medical_details == 'None'%}
     <p id='comentarios' style='background: #f6f6f6;font-size: 1; padding: 0px; margin: 0px;'> <b>Antecedentes personales patológicos - Medicación concomitante:</b> Ninguno</p>
   {%else%}
-    <p id='comentarios' style='background: #f6f6f6;font-size: 1; padding: 0px; margin: 0px;'> <b>Antecedentes personales patológicos - Medicación concomitante:</b> {{pacient.medical_details}}</p>
+    <p id='comentarios' style='background: #f6f6f6;font-size: 1; padding: 0px; margin: 0px;'> <b>Antecedentes personales patológicos - Medicación concomitante:</b> {{patient.medical_details}}</p>
   {%endif%}
   <hr>
   <article>
@@ -172,7 +174,7 @@
           <th>vel pico</th>
           <th> porcentaje estenosis</th>
         </tr>
-        <tr><td> mm/s</td><td> % </td></tr>
+        <tr><td>mm/s</td><td> % </td></tr>
         <tr><td>150 </td><td>0</td></tr>
         <tr><td>250 </td><td>10</td></tr>
         <tr><td>400 </td><td>20</td></tr>
@@ -188,7 +190,7 @@
       </table>
     </section>
     <section style=''>
-      <p style='text-align: center; font-size:0.9em'>Edad Arterial: {{pacient.arterial_age}}</p>
+      <p style='text-align: center; font-size:0.9em'>Edad Arterial: {{patient.arterial_age}}</p>
       <table id='patient-data' style='text-align:center; border: 1px solid #dddddd; font-size:0.85em; padding:1px;'>
         <tr>
           <th style="background-color: #404040; color:white;">Adicciones</th>
@@ -197,9 +199,9 @@
         </tr>
         <tr>
           <td style="background-color: #404040; color:white;">Tabaquismo</td>
-          {%if pacient.smoke == True%}
+          {%if patient.smoke == True%}
             <td>{{smoke_years}}</td>
-            <td >{{pacient.smoke_quantity}}</td>
+            <td >{{patient.smoke_quantity}}</td>
           {%else%}
            <td>-</td>
            <td>-</td>
@@ -212,50 +214,50 @@
         </tr>
         <tr>
           <td style="background-color: #404040; color:white;">Diabetes Mellitus</td>
-          {%if pacient.diabetes == False%}
+          {%if patient.diabetes == False%}
             <td> No </td>
             <td>-</td>
           {%else%}
-            <td>{{pacient.diabetes_type}}</td>
-            <td>{{pacient.diabetes_date|date:"Y"}}</td>
+            <td>{{patient.diabetes_type}}</td>
+            <td>{{patient.diabetes_date|date:"Y"}}</td>
           {%endif%}
         <tr>
           <td style="background-color: #404040; color:white;">Hipertension Arterial</td>
-          {%if pacient.hyper == False%}
+          {%if patient.hyper == False%}
             <td>No</td>
             <td>-</td>
           {%else%}
-            {%if pacient.hyper_type == 'Secundaria'%}
+            {%if patient.hyper_type == 'Secundaria'%}
               <td>2ª</td>
-            {%elif pacient.hyper_type == 'Primaria'%}
+            {%elif patient.hyper_type == 'Primaria'%}
               <td>1ª</td>
             {%endif%}
-          <td>{{pacient.hyper_date|date:"Y"}}</td>
+          <td>{{patient.hyper_date|date:"Y"}}</td>
           {%endif%}
         </tr>
         <tr>
           <td style="background-color: #404040; color:white;">Dislipidemia</td>
-          {%if pacient.dislipidemia == False%}
+          {%if patient.dislipidemia == False%}
             <td>No</td>
             <td>-</td>
           {%else%}
-            <td>{{pacient.dislipidemia_type}}</td>
-            <td>{{pacient.dislipidemia_date|date:"Y"}}</td>
+            <td>{{patient.dislipidemia_type}}</td>
+            <td>{{patient.dislipidemia_date|date:"Y"}}</td>
           {%endif%}
         </tr>
         <tr>
           <td style="background-color: #404040; color:white;"> IRC</td>
-          {%if pacient.irc == False%}
+          {%if patient.irc == False%}
             <td>No</td>
             <td>-</td>
           {%else%}
-            <td>{{pacient.irc_type}}</td>
-            <td>{{pacient.irc_date|date:"Y"}}</td>
+            <td>{{patient.irc_type}}</td>
+            <td>{{patient.irc_date|date:"Y"}}</td>
           {%endif%}
         </tr>
         <tr>
           <td style="background-color: #404040; color:white;"> IAM</td>
-          {%if pacient.iam == True%}
+          {%if patient.iam == True%}
             <td>Si</td>
           {%else%}
             <td>No</td>
@@ -264,7 +266,7 @@
         </tr>
         <tr>
           <td style="background-color: #404040; color:white;"> ACV</td>
-          {%if pacient.acv == True%}
+          {%if patient.acv == True%}
             <td>Si</td>
           {%else%}
             <td>No</td>
@@ -273,7 +275,7 @@
         </tr>
         <tr>
           <td style="background-color: #404040; color:white;"> Revasc</td>
-          {%if pacient.revasc == True%}
+          {%if patient.revasc == True%}
             <td>Si</td>
           {%else%}
             <td>No</td>
@@ -282,7 +284,7 @@
         </tr>
         <tr> 
           <td style="background-color: #404040; color:white;"> ENFVP</td>
-          {%if pacient.enfvp == True%}
+          {%if patient.enfvp == True%}
             <td>Si</td>
           {%else%}
             <td>No</td>
@@ -291,7 +293,7 @@
         </tr>
         <tr>
           <td style="background-color: #404040; color:white;"> ACV AIT</td>
-          {%if pacient.acv_ait == True%}
+          {%if patient.acv_ait == True%}
             <td>Si</td>
           {%else%}
             <td>No</td>
@@ -300,7 +302,7 @@
         </tr>
         <tr>
           <td style="background-color: #404040; color:white;"> FECVT</td>
-          {%if pacient.fecvt == True%}
+          {%if patient.fecvt == True%}
             <td>Si</td>
           {%else%}
             <td>No</td>

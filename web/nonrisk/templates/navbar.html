@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pacients</title>
+    <title>Entidades</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->  
@@ -35,9 +35,9 @@
       </div>
       <div class='hover-logout'>
         <a href='/accounts/logout'  style="float: right;">Log out</a>
-        <a href='/add/pacient'>Agregar Paciente</a>
+        <a href='/add/company'>Agregar Entidad</a>
       </div>
-      <form  method='POST' action="{% url 'pacient_search'%}" style="float: right;">
+      <form  method='POST' action="{% url 'company_search'%}" style="float: right;">
         {% csrf_token %}
         <input type="text" placeholder="Search.." name="data">
         <button type="submit"><i class="fa fa-search"></i></button>

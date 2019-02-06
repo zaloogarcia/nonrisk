@@ -1,12 +1,6 @@
-import re
-import math
-import base64
-import tkinter
-import io
+import re, math, base64, tkinter, matplotlib
 from io import *
-import PIL
 from PIL import Image
-import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pylab
 from pylab import *
@@ -31,7 +25,6 @@ from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.core.files.base import ContentFile
 from django.core.files.images import ImageFile
-
 
 # NEED TO INSTALL: - PILLOW
 #                  - PDFKIT
@@ -59,38 +52,97 @@ def ageFromDate(born):
 def get_item(dictionary, key): return dictionary.get(key)
 
 @login_required
-def pacients_view(request):
-    pacients_list = Pacient.objects.all()
+def companies_view(request):
+    companies_list = Company.objects.all()
+    patient_list = Patient.objects.all()
+
+    ammount_patients = 0
+    ammount_patients_dict = {}
+    for company in companies_list:
+        ammount_patients = patient_list.filter(company_id = company.id).count()
+        ammount_patients_dict.update({company.id : ammount_patients})
+        ammount_patients = 0
+    context = {'companies_list':companies_list, 'ammount_patients':ammount_patients_dict}
+    return render(request, 'companies.html', context)
+
+@login_required
+def company_add(request):
+    if request.method == 'POST':
+        new_company = Company.objects.create(
+            name = request.POST.get('name'))
+        new_company.logo=request.FILES['logo']
+        new_company.save()
+
+        return redirect('company_view', new_company.id)
+    elif request.method == 'GET':
+        return(render(request, 'company_add.html'))
+
+@login_required
+def company_edit(request, company_id):
+    company = Company.objects.filter(id=company_id).values() [:1].get()
+    
+    if request.method == 'GET':
+        context = {'company': company}
+        return(render(request, 'company_edit.html',context))
+    
+    if request.method == 'POST':
+        company = Company.objects.filter(id=company_id).get()
+        company.name = request.POST.get('name')
+        company.save()
+        return redirect('company_view', company.id)
+            
+@login_required
+def company_search(request):
+    if request.method == 'POST':
+        data = request.POST.get('data')
+        companies_list = Company.objects.all()
+
+        if RepresentsInt(data): 
+            companies_list = list(Company.object.filter(id=data))
+        else:  
+            companies_list = list(Company.objects.filter(name__startswith=data))
+        context = { 'companies_list': companies_list}            
+        return render(request, 'company_search.html', context)
+
+# Terminar company_view
+@login_required
+def company_view(request, company_id):
+    company = Company.objects.filter(id=company_id) [:1].get()
+    patients_list = Patient.objects.filter(company=company)
     studies_list = Studies.objects.all()
     
     ammount_studies = 0
     ammount_studies_dict = {}
     last_studies_date_dict = {}
     last_studies_date = ''
-    for pacient in pacients_list:
-        ammount_studies = studies_list.filter(pacient_id= pacient.id).count()
+    for patient in patients_list:
+        ammount_studies = studies_list.filter(patient_id= patient.id).count()
         if ammount_studies > 0:
-            last_studies_date = studies_list.filter(pacient_id= pacient.id).order_by('date').last()
+            last_studies_date = studies_list.filter(patient_id= patient.id).order_by('date').last()
             last_studies_date = str(last_studies_date.date)
         else:
             ammount_studies = 0
             last_studies_date = ''    
      
-        last_studies_date_dict.update({pacient.id : last_studies_date})
-        ammount_studies_dict.update({pacient.id : ammount_studies})
+        last_studies_date_dict.update({patient.id : last_studies_date})
+        ammount_studies_dict.update({patient.id : ammount_studies})
         last_studies_date = ''
         ammount_studies = 0
 
-    context = {'pacients_list': pacients_list, 'ammount_studies': ammount_studies_dict,
-     'last_studies_date': last_studies_date_dict}
-    return render(request,'pacients.html',context)
+    context = {'patients_list': patients_list, 'ammount_studies': ammount_studies_dict,
+     'last_studies_date': last_studies_date_dict, 'company':company}
+    return render(request,'company.html',context)
 
 @login_required
-def pacient_search(request):
-    print(request.method)
+def company_delete(request, company_id):
+        Company.objects.filter(id=company_id).delete()
+
+        return redirect('companies_view')
+
+@login_required
+def patient_search(request):
     if request.method == 'POST':
         data = request.POST.get('data')
-        print(data)
         studies_list = Studies.objects.all()
 
         ammount_studies = 0
@@ -98,43 +150,45 @@ def pacient_search(request):
         last_studies_date_dict = {}
         last_studies_date = ''
 
-        if RepresentsInt(data): pacient_list = list(Pacient.objects.filter(id = data))
+        if RepresentsInt(data): patient_list = list(Patient.objects.filter(id = data))
         else:
-            pacient_list = list(Pacient.objects.filter(name__startswith= data))
-            pacient_list.extend(list(Pacient.objects.filter(name_last__startswith= data)))
+            patient_list = list(Patient.objects.filter(name__startswith= data))
+            patient_list.extend(list(Patient.objects.filter(name_last__startswith= data)))
 
-        for pacient in pacient_list:
-            ammount_studies = studies_list.filter(pacient_id = pacient.id).count()
+        for patient in patient_list:
+            ammount_studies = studies_list.filter(patient_id = patient.id).count()
             if ammount_studies > 0:
-                last_studies_date = studies_list.filter(pacient_id= pacient.id).order_by('date').first()
+                last_studies_date = studies_list.filter(patient_id= patient.id).order_by('date').first()
                 last_studies_date = str(last_studies_date.date)
             else:
                 ammount_studies = 0
                 last_studies_date = ''
-            last_studies_date_dict.update({pacient.id : last_studies_date})
-            ammount_studies_dict.update({pacient.id : ammount_studies})
+            last_studies_date_dict.update({patient.id : last_studies_date})
+            ammount_studies_dict.update({patient.id : ammount_studies})
             last_studies_date = ''
             ammount_studies = 0
-        context = {'pacient_list': pacient_list,'ammount_studies': ammount_studies_dict,
+        context = {'patient_list': patient_list,'ammount_studies': ammount_studies_dict,
             'last_studies_date': last_studies_date_dict}
-        print (context)
-        return render(request, 'pacient_search.html', context)
+        return render(request, 'patient_search.html', context)
 
 @login_required
-def pacient_view(request,pacient_id): 
+def patient_view(request,company_id, patient_id): 
     try:
-        pacient = Pacient.objects.filter(id=pacient_id).values()[:1].get()
-        studies_list = Studies.objects.filter(pacient_id = pacient_id) #List of pacient's studies
-        context = {'pacient':pacient, 'studies_list':studies_list,}
-    except Pacient.DoesNotExist:
-        raise Http404("Pacient does not exist")
-    return render(request, 'pacient.html', context)
+        company = Company.objects.filter(id=company_id).values() [:1].get()
+        patient = Patient.objects.filter(id=patient_id).values()[:1].get()
+        studies_list = Studies.objects.filter(patient_id = patient_id) #List of patient's studies
+        context = {'company': company, 'patient':patient, 'studies_list':studies_list,}
+    except Patient.DoesNotExist:
+        raise Http404("Patient does not exist")
+    return render(request, 'patient.html', context)
 
 @login_required
-def pacient_add(request):
+def patient_add(request, company_id):
+    company = Company.objects.filter(id=company_id).get()
     try:
         if request.method == 'POST':
-            new_pacient = Pacient.objects.create(
+            new_patient = Patient.objects.create(
+                company = company,
                 id = request.POST.get('id'),
                 name = request.POST.get('name'),
                 name_second= request.POST.get('name_second'),
@@ -176,90 +230,84 @@ def pacient_add(request):
                 fecvt = request.POST.get('fecvt') == 'on',
             )
 
-            return redirect('pacient_view', new_pacient.id)
+            return redirect('patient_view', company.id, new_patient.id)
         elif request.method == 'GET':
-            return(render(request, 'pacient_add.html'))
+            context = {'company' : company}
+            return(render(request, 'patient_add.html', context
+                ))
     except IntegrityError:
-        return HttpResponse("Pacient with the same ID exist")
+        return HttpResponse("Patient with the same ID exist")
 
 @login_required
-def pacient_edit(request, pacient_id):
+def patient_edit(request, company_id, patient_id):
     try:
-        pacient = Pacient.objects.filter(id=pacient_id).get()
-        print(pacient.smoke)
-    except Pacient.DoesNotExist:
-        raise Http404("Pacient does not exist")
+        patient = Patient.objects.filter(id=patient_id).values()[:1].get()
+        company = Company.objects.filter(id=company_id).values()[:1].get()
+    except Patient.DoesNotExist:
+        raise Http404("Patient does not exist")
 
     if request.method == "GET":
-        context = model_to_dict(pacient)
-        print(context)
-        return render(request,'pacient_edit.html', context)
+        context = {'patient':patient, 'company':company}
+        return render(request,'patient_edit.html', context)
     
     elif request.method == "POST":
-        new_pacient = Pacient.objects.create(
-            id = request.POST.get('id'),
-            name = request.POST.get('name'),
-            name_second= request.POST.get('name_second'),
-            name_last= request.POST.get('name_last'),
-            sex= request.POST.get('sex'),
-            address= request.POST.get('address'),
-            phone= request.POST.get('phone'),
-            date_of_birth= request.POST.get('date_of_birth'),
-            medical_details= request.POST.get('medical_details'),
-            arterial_age = pacient.arterial_age,
-            
-            smoke= request.POST.get('smoke') == 'on',
-            smoke_quantity= None if request.POST.get('smoke_quantity') == '' else request.POST.get('smoke_quantity'),
-            smoke_duration= None if request.POST.get('smoke_duration') == '' else request.POST.get('smoke_duration'),
-            smoke_quit= None if request.POST.get('smoke_quit') == '' else request.POST.get('smoke_quit'),
+        # print(request.POST.get('id'), patient.id)
+        patient = Patient.objects.filter(id=patient_id).get()
 
-            
-            diabetes = request.POST.get('diabetes') == 'on',
-            diabetes_type= None if request.POST.get('diabetes_type') == '' else request.POST.get('diabetes_type'),
-            diabetes_date= None if request.POST.get('diabetes_date') == '' else request.POST.get('diabetes_date'),
-
-            hyper = request.POST.get('hyper') =='on',
-            hyper_type= None if request.POST.get('hyper_type') == '' else request.POST.get('hyper_type'),
-            hyper_date= None if request.POST.get('hyper_date') == '' else request.POST.get('hyper_date'),
-
-            dislipidemia = request.POST.get('dislipidemia') == 'on',
-            dislipidemia_type= None if request.POST.get('dislipidemia_type') == '' else request.POST.get('dislipidemia_type'),
-            dislipidemia_date= None if request.POST.get('dislipidemia_date') == '' else request.POST.get('dislipidemia_date'),
-            
-            irc = request.POST.get('irc') == 'on',
-            irc_type= None if request.POST.get('irc_type') == '' else request.POST.get('irc_type'),
-
-            iam = request.POST.get('iam') == 'on',
-            acv = request.POST.get('acv') == 'on',
-            revasc = request.POST.get('revasc') == 'on',
-            enfvp = request.POST.get('enfvp') == 'on',
-            acv_ait = request.POST.get('acv_ait') == 'on',
-            fecvt = request.POST.get('fecvt') == 'on',
-        )
-        
-        return render(request, 'pacient.html', model_to_dict(pacient))
+        patient.id                = request.POST.get('id')
+        patient.name              = request.POST.get('name')
+        patient.name_second       = request.POST.get('name_second')
+        patient.name_last         = request.POST.get('name_last')
+        patient.sex               = request.POST.get('sex')
+        patient.address           = request.POST.get('address')
+        patient.phone             = request.POST.get('phone')
+        patient.date_of_birth     = request.POST.get('date_of_birth')
+        patient.medical_details   = request.POST.get('medical_details')
+        patient.smoke             = request.POST.get('smoke')        == 'on'
+        patient.diabetes          = request.POST.get('diabetes')     == 'on'
+        patient.hyper             = request.POST.get('hyper')        == 'on'
+        patient.dislipidemia      = request.POST.get('dislipidemia') == 'on'
+        patient.irc               = request.POST.get('irc')          == 'on'
+        patient.iam               = request.POST.get('iam')          == 'on'
+        patient.acv               = request.POST.get('acv')          == 'on'
+        patient.revasc            = request.POST.get('revasc')       == 'on'
+        patient.enfvp             = request.POST.get('enfvp')        == 'on'
+        patient.acv_ait           = request.POST.get('acv_ait')      == 'on'
+        patient.fecvt             = request.POST.get('fecvt')        == 'on'
+        patient.smoke_quantity    = None if request.POST.get('smoke_quantity')    == '' else request.POST.get('smoke_quantity')
+        patient.smoke_duration    = None if request.POST.get('smoke_duration')    == '' else request.POST.get('smoke_duration')
+        patient.smoke_quit        = None if request.POST.get('smoke_quit')        == '' else request.POST.get('smoke_quit')
+        patient.diabetes_type     = None if request.POST.get('diabetes_type')     == '' else request.POST.get('diabetes_type')
+        patient.diabetes_date     = None if request.POST.get('diabetes_date')     == '' else request.POST.get('diabetes_date')
+        patient.hyper_type        = None if request.POST.get('hyper_type')        == '' else request.POST.get('hyper_type')
+        patient.hyper_date        = None if request.POST.get('hyper_date')        == '' else request.POST.get('hyper_date')
+        patient.irc_type          = None if request.POST.get('irc_type')          == '' else request.POST.get('irc_type')
+        patient.dislipidemia_type = None if request.POST.get('dislipidemia_type') == '' else request.POST.get('dislipidemia_type')
+        patient.dislipidemia_date = None if request.POST.get('dislipidemia_date') == '' else request.POST.get('dislipidemia_date')
+        patient.save()
+        return redirect('patient_view', company_id, patient_id)
 
 @login_required
-def pacient_delete(request, pacient_id):
-        Pacient.objects.filter(id=pacient_id).delete()
+def patient_delete(request, company_id, patient_id):
+        Patient.objects.filter(id=patient_id).delete()
 
-        pacients_list = Pacient.objects.all()
-        context = {'pacients_list': pacients_list,}
-        return redirect('pacients_view')
+        return redirect('company_view', company_id)
 
 @login_required
-def study_view(request, pacient_id, studies_id):
+def study_view(request, company_id, patient_id, studies_id):
     try:
-        study = Studies.objects.filter(id=studies_id) [:1].get()
-        pacient = Pacient.objects.filter(id=pacient_id) [:1].get()
-        context = {'pacient': pacient,'study':study}
+        study = Studies.objects.filter(id=studies_id)[:1].get()
+        patient = Patient.objects.filter(id=patient_id)[:1].get()
+        company = Company.objects.filter(id=company_id)[:1].get()
+        context = {'company':company,'patient': patient,'study':study}
     except Studies.DoesNotExist:
         raise Http404("Study does not exist")
     return render(request, 'study.html', context)
 
 @login_required
-def study_add(request, pacient_id):
-    pacient = Pacient.objects.filter(id=pacient_id).get()
+def study_add(request, company_id, patient_id):
+    company = Company.objects.filter(id=company_id).get()
+    patient = Patient.objects.filter(id=patient_id).get()
 
     if request.method == 'POST':
 
@@ -269,7 +317,7 @@ def study_add(request, pacient_id):
         image_data = base64.b64decode(image_data)
         image_data = BytesIO(image_data)
         im = Image.open(image_data)
-        filename = 'Arterias-'+ str(pacient.id) + '-' + str(request.POST.get('date')) + '.png'
+        filename = 'Arterias-'+ str(patient.id) + '-' + str(request.POST.get('date')) + '.png'
         tempfile = im
         tempfile_io = BytesIO()
         tempfile.save(tempfile_io, format=im.format)
@@ -278,7 +326,7 @@ def study_add(request, pacient_id):
         leftarea = request.POST.get('areaizquierda')
         rightarea = request.POST.get('areaderecha')
         totalarea = float(leftarea) + float(rightarea)
-        age = ageFromDate(pacient.date_of_birth)
+        age = ageFromDate(patient.date_of_birth)
 
         xlabel('Edad')
         ylabel('Area total de Ateroclerosis(mm²)')
@@ -286,7 +334,7 @@ def study_add(request, pacient_id):
 
         # Prevencion primaria
         # Women
-        if (pacient.iam or pacient.acv or pacient.revasc or pacient.enfvp or pacient.acv_ait):
+        if (patient.iam or patient.acv or patient.revasc or patient.enfvp or patient.acv_ait):
             plt.plot(age, totalarea, 'ro', label='Usted')
             plt.plot([30,  38.0, 43, 48, 53, 58, 63, 68, 73, 78],
                      [10, 18, 25, 36, 45, 75, 100, 108, 130, 160],
@@ -316,7 +364,7 @@ def study_add(request, pacient_id):
         buffer = io.BytesIO()
         plt.savefig(buffer, format="png")
         figure = ImageFile(buffer)
-        figurename = 'Grafico-'+ str(pacient.id) + '-' + str(request.POST.get('date')) + '.png'
+        figurename = 'Grafico-'+ str(patient.id) + '-' + str(request.POST.get('date')) + '.png'
 
         # Closes chart plot
         plt.clf()
@@ -324,26 +372,26 @@ def study_add(request, pacient_id):
         # Arterial Age update and Renal filter Update
         scr = float(request.POST.get('creat'))
         renalFilter = 0
-        if pacient.sex == 'M' :
+        if patient.sex == 'M' :
             arterialAge = round(((math.log(totalarea/5.4175))/0.0426))
             
-            if pacient.race == 'B': #Black
+            if patient.race == 'B': #Black
                 renalFilter = 141 * (min((scr/ 0.9), 1)**(-0.411))* (max(scr/0.9, 1)**(-1.209))* (0.993 ** float(age)) * 1.159
-            elif pacient.race == 'W': #White
+            elif patient.race == 'W': #White
                 renalFilter = 141 * (min((scr/ 0.9), 1)**(-0.411))* (max(scr/0.9, 1)**(-1.209))* (0.993 ** float(age))
 
-        elif pacient.sex == 'F':
+        elif patient.sex == 'F':
             arterialAge = round(((math.log(totalarea/4.1942))/0.0392),4)
-            if pacient.race == 'B':
+            if patient.race == 'B':
                 renalFilter = 141 * (min((scr/ 0.7), 1)**(-0.329))* (max(scr/0.9, 1)**(-1.209))* (0.993 ** float(age)) *1.018 * 1.159
-            elif pacient.race == 'W':
+            elif patient.race == 'W':
                 renalFilter = 141 * (min((scr/ 0.9), 1)**(-0.329))* (max(scr/0.9, 1)**(-1.209))* (0.993 ** float(age)) * 1.018 
 
-        Pacient.objects.filter(id=pacient_id).update(arterial_age= arterialAge)
+        Patient.objects.filter(id=patient_id).update(arterial_age= arterialAge)
 
 
         new_study = Studies.objects.create(
-            pacient=pacient,
+            patient=patient,
             date= request.POST.get('date'),
             doctor=request.POST.get('doctor'),
             
@@ -372,21 +420,23 @@ def study_add(request, pacient_id):
         new_study.graphic.save(figurename, ContentFile(buffer.getvalue()) , save = True) #save the photo
 
         
-        return redirect('study_view', pacient.id, new_study.id)
+        return redirect('study_view', company.id, patient.id, new_study.id)
     else:
-        pacient = Pacient.objects.filter(id=pacient_id).get()
-        context = {'pacient': pacient}
+        company = Company.objects.filter(id=company_id).get()
+        patient = Patient.objects.filter(id=patient_id).get()
+        context = {'company':company, 'patient': patient}
         return render(request,'study_add.html', context)
 
 @login_required
-def study_edit(request, pacient_id, studies_id):
+def study_edit(request, company_id, patient_id, studies_id):
     try:
-        pacient = Pacient.objects.filter(id=pacient_id)
-        study_list = Studies.objects.filter(pacient=pacient_id)
-        study = Studies.objects.filter(id=studies_id).get()
-        pacient = pacient.get()
-        context = {'pacient':pacient ,'study':study}
-        print(study)
+        company    = Company.objects.filter(id=company_id)[:1].get()
+        patient    = Patient.objects.filter(id=patient_id)
+        study_list = Studies.objects.filter(patient=patient_id)
+        study      = Studies.objects.filter(id=studies_id).get()
+        patient    = patient.get()
+        context    = {'company':company,'patient':patient ,'study':study}
+
     except Studies.DoesNotExist:
         raise Http404("Study does not exist")
 
@@ -395,66 +445,67 @@ def study_edit(request, pacient_id, studies_id):
         return render(request,'study_edit.html', context)
     
     elif request.method == "POST":
-        new_study = Studies.objects.create(
-            pacient=pacient,
-            date= request.POST.get('date'),
-            doctor=request.POST.get('doctor'),
-            
-            weight=request.POST.get('weight'),
-            height=request.POST.get('height'),
-            tas=request.POST.get('tas'),
-            tad=request.POST.get('tad'),
-            pulse=request.POST.get('pulse'),
-
-            chol_level=None if request.POST.get('chol_level') == '' else request.POST.get('chol_level'),
-            hdl_level=None if request.POST.get('hdl_level') == '' else request.POST.get('hdl_level'),
-            ldl_level=None if request.POST.get('ldl_level') == '' else request.POST.get('ldl_level'),
-            tri_level=None if request.POST.get('tri_level') == '' else request.POST.get('tri_level'),
-
-            glucemia=request.POST.get('glucemia'),
-            hba1c=request.POST.get('hba1c'),
-            ac_uric=request.POST.get('ac_uric'),
-            creat=request.POST.get('creat'),
-            tsh=request.POST.get('tsh'),
-            pcr=request.POST.get('pcr'),
-
-            comments=None if request.POST.get('comments') == 'None' else request.POST.get('comments'),
-        )
-        
+        study.date      = request.POST.get('date')
+        study.doctor    = request.POST.get('doctor')     
+        study.weight    = request.POST.get('weight')
+        study.height    = request.POST.get('height')
+        study.tas       = request.POST.get('tas')
+        study.tad       = request.POST.get('tad')
+        study.pulse     = request.POST.get('pulse')
+        study.glucemia  = request.POST.get('glucemia')
+        study.hba1c     = request.POST.get('hba1c')
+        study.ac_uric   = request.POST.get('ac_uric')
+        study.creat     = request.POST.get('creat')
+        study.tsh       = request.POST.get('tsh')
+        study.pcr       = request.POST.get('pcr')
+        study.chol_level= None if request.POST.get('chol_level') == '' else request.POST.get('chol_level')
+        study.hdl_level = None if request.POST.get('hdl_level')  == '' else request.POST.get('hdl_level')
+        study.ldl_level = None if request.POST.get('ldl_level')  == '' else request.POST.get('ldl_level')
+        study.tri_level = None if request.POST.get('tri_level')  == '' else request.POST.get('tri_level')
+        study.comments  = None if request.POST.get('comments')   == 'None' else request.POST.get('comments')
+        study.save()
         return render(request, 'study.html', context)
 
 @login_required
-def study_delete(request, studies_id, pacient_id):
+def study_delete(request, company_id, studies_id, patient_id):
     study = Studies.objects.filter(id=studies_id).delete()
-    studies = Studies.objects.filter(pacient=pacient_id)
+    studies = Studies.objects.filter(patient=patient_id)
     context = {'studies': studies}
-    return redirect('pacient_view', pacient_id)
+    return redirect('patient_view', company_id, patient_id)
 
 @login_required
-def export_pdf(request, pacient_id, studies_id):
+def export_pdf(request, company_id, patient_id, studies_id):
     template = get_template('pdf2.html')
-    pacient = Pacient.objects.filter(id = pacient_id) [:1].get()
+    company = Company.objects.filter(id=company_id)[:1].get()
+    patient = Patient.objects.filter(id = patient_id) [:1].get()
     studies = Studies.objects.filter(id = studies_id) [:1].get()
 
-    if pacient.smoke:
-        years = relativedelta(pacient.smoke_quit, pacient.smoke_duration).years
+    if patient.smoke:
+        years = relativedelta(patient.smoke_quit, patient.smoke_duration).years
     else:
         years = 0
+
+    # Company logo
+    with open(str(company.logo.path), "rb") as image_file:
+        encoded1 = base64.b64encode(image_file.read())
+    encoded1 = encoded1.decode()
+    url_logo = 'data:image/png;base64,{}'.format(encoded1)
+
     # Patient drawing
     with open(str(studies.photo.path), "rb") as image_file:
-        encoded = base64.b64encode(image_file.read())
-    encoded= encoded.decode()
-    url_photo = 'data:image/png;base64,{}'.format(encoded)
+        encoded2 = base64.b64encode(image_file.read())
+    encoded2= encoded2.decode()
+    url_photo = 'data:image/png;base64,{}'.format(encoded2)
 
     # Patient chart
     with open(str(studies.graphic.path), "rb") as image_file:
-        encoded2 = base64.b64encode(image_file.read())
-    encoded2 = encoded2.decode()
-    url_graphic = 'data:image/png;base64,{}'.format(encoded2)
+        encoded3 = base64.b64encode(image_file.read())
+    encoded3 = encoded3.decode()
+    url_graphic = 'data:image/png;base64,{}'.format(encoded3)
 
 
-    context = {'pacient':pacient, 'studies':studies, 'photo': url_photo,
-               'graphic': url_graphic, 'smoke_years': years}
+    context = {'patient':patient, 'studies':studies, 'photo': url_photo,
+               'graphic': url_graphic,'logo': url_logo, 'smoke_years': years}
 
     html = template.render(context)
     # response = BytesIO()

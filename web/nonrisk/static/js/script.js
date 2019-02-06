@@ -89,16 +89,16 @@ function saveImage() {
     areaizquierda = areaizquierda.toString();
     areatotal = areatotal.toString();
     
-    ctx.rect(452, 359, 130, 98); //derecha
-    ctx.rect(43, 361, 130, 100); //izquierda
+    ctx.rect(452, 359, 130, 98); //right
+    ctx.rect(43, 361, 130, 100); //left
     ctx.fillStyle = "white";
     ctx.fill();
 
     ctx.fillStyle = "black";
     
-    ctx.rect(43, 361, 130, 100); //izquierda
+    ctx.rect(43, 361, 130, 100); //left
     ctx.stroke();
-    ctx.rect(452, 359, 130, 98); //derecha
+    ctx.rect(452, 359, 130, 98); //right
     ctx.stroke();
     
     ctx.fillText("Área de placa", 50, 383);
@@ -127,8 +127,6 @@ function saveImage() {
     
     final_image = canvas.toDataURL('image/png',1);
     document.getElementById('image_data').value=final_image;
-//   var final_image = new Image();
-//   final_image.src = canvas.toDataURL('image/png', 1)
  }
 
 

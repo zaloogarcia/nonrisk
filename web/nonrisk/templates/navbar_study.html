@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Estudios de {{patient.name}}</title>
+    <title>Editar estudio {{study.id}}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->  
@@ -33,15 +33,11 @@
       <div class='hover-edit'>
         <a href='/'>Home</a>
       </div>
-      <div class='hover-logout'>
-        <a href="{% url 'patient_view' company.id patient.id %}">Volver al paciente</a>
-        <a href='{% url 'study_add' company.id patient.id%}'>Agregar Estudio</a>
-        <a href="{% url 'study_edit' company.id patient.id study.id %}"> Editar Estudio</a>
-      </div>
       <div class='hover-delete'>
         <a href='/accounts/logout'  style="float: right;">Log out</a>
-        <a onclick="return confirm('Estas Seguro?');" 
-        href="{% url 'study_delete' company.id patient.id study.id %}">Eliminar Estudio</a>
+      </div>
+      <div class='hover-logout'>
+        <a href='{% url 'study_view' company.id patient.id study.id%}'>Volver</a>
       </div>
       <form  method='POST' action="{% url 'patient_search'%}" style="float: right;">
         {% csrf_token %}

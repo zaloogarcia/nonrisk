@@ -1,7 +1,7 @@
-{% extends 'navbar.html' %}
+{% extends 'navbar_company.html' %}
 {% block content %}
 {% load static %}
-<form method='POST' action='{% url 'pacient_add'%}'>
+<form method='POST' action='{% url 'patient_add' company.id %}'>
   {% csrf_token %}
   
   <div class="container-list">
@@ -140,34 +140,33 @@
     </div>
     <!--  -->
     <div style='height:92px; width:1238px; display: block;'>
-      <br>
+        <br>
       <div style='display:contents'>
-    <div style='width:300px; display:inline'>
-      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputIAM'>Antecedentes IAM:</label>
-      <input id='inputIAM' type="checkbox" name='iam'>
+        <div style='width:300px; display:inline'>
+          <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputIAM'>Antecedentes IAM:</label>
+          <input id='inputIAM' type="checkbox" name='iam'>
 
-      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputACV'>Antecedentes ACV:</label>
-      <input id='inputACV' type="checkbox" name='acv'>
-    </div>
+          <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputACV'>Antecedentes ACV:</label>
+          <input id='inputACV' type="checkbox" name='acv'>
+        </div>
     
-    <div style='width:300px; display:inline'>
-      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputRevasc'>Antecedentes Revasc:</label>
-      <input id='inputRevasc' type="checkbox" name='revasc'> 
+        <div style='width:300px; display:inline'>
+          <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputRevasc'>Antecedentes Revasc:</label>
+          <input id='inputRevasc' type="checkbox" name='revasc'> 
 
-      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputEnfvp'>Antecedentes Enf VP:</label>
-      <input id='inputEnfvp' type="checkbox" name='enfvp'>
-    </div>
+          <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputEnfvp'>Antecedentes Enf VP:</label>
+          <input id='inputEnfvp' type="checkbox" name='enfvp'>
+        </div>
     
-    <div style='width:300px; display:inline'>
-      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputAcv_ait'>Antecedentes ACV-AIT:</label>
-      <input id='inputAcv_ait' type="checkbox" name='acv_ait'>
+        <div style='width:300px; display:inline'>
+          <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputAcv_ait'>Antecedentes ACV-AIT:</label>
+          <input id='inputAcv_ait' type="checkbox" name='acv_ait'>
 
-      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputFecvt'>Antecedentes FECVT:</label>
-      <input id='inputFecvt' type="checkbox" name='fecvt'>
+          <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputFecvt'>Antecedentes FECVT:</label>
+          <input id='inputFecvt' type="checkbox" name='fecvt'>
+        </div>
+      </div>
     </div>
-    </div>
-    </div>
-    <!-- <input style='width:100%;' id='inputMedicalDetails' type="text" placeholder="Detalles medicos" name='medical_details'> -->
     <div>
     <label>Detalles médicos:</label><br>
     <textarea style='background-color: #e0dddd;' rows="4" cols="50" name="medical_details"></textarea>
@@ -193,14 +192,3 @@ function unhide(id) {
 
 
 {% endblock %}
-
-
-<!--       <input style='width:70px' id='inputDiabetesType' type="int" placeholder="Tipo">
-
-      <input style='width:120px' id='inputDiabetesCHOLLevel' type="int" placeholder="Nivel de CHOL">
-
-      <input style='width:110px' id='inputDiabetesHDLLevel' type="int" placeholder="Nivel de HDL">
-
-      <input style='width:110px' id='inputDiabetesLDLLevel' type="int" placeholder="Nivel de LDL">
-
-      <input style='width:110px' id='inputDiabetesTRILevel' type="int" placeholder="Nivel de TRI"> -->

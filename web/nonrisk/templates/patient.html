@@ -1,0 +1,184 @@
+{% extends 'navbar_2.html' %}
+{% block content %}
+{% load static %}
+
+<div class="container-list">
+  <body>
+  <div class='box-35'>
+    <br>
+    <h4>
+    {{patient.name}} {{patient.name_second}} {{patient.name_last}}
+    </h4>
+    <br>
+    <button class='hover-edit' onclick='unhide("personal_data")'>Datos Personales</button>
+    <table style='display:none;' id='personal_data'>
+      <tr style='border-color:white;background-color: aliceblue;'>
+        <td style='border-color:white;'>DNI: {{patient.id}}</td>
+        <td style='border-color:white;'>{{patient.id}}</td>
+      </tr>
+      <tr style='border-color:white;background-color: aliceblue;'>
+        <td style='border-color:white;'>Sexo:</td>
+        <td style='border-color:white;'>{{patient.sex}}</td>
+      </tr>
+      <tr style='border-color:white;background-color: aliceblue;'>
+        <td style='border-color:white;'>Telefono:</td>
+        <td style='border-color:white;'>{{patient.phone}}</td>
+      </tr>
+      <tr style='border-color:white;background-color: aliceblue;'>
+        <td style='border-color:white;'>Nacimiento:</td>
+        <td style='border-color:white;'>{{patient.date_of_birth|date:"d/m/Y"}}</td>
+      </tr>
+      <tr style='border-color:white;background-color: aliceblue;'>
+        <td style='border-color:white;'>Edad Arterial:</td>
+        <td style='border-color:white;'>{{patient.arterial_age}}</td>
+      </tr>
+      <tr style='border-color:white;background-color: aliceblue;'>
+        <td style='border-color:white;'>Domicilio:</td>
+        <td style='border-color:white;'>{{patient.address}}</td>
+      </tr>
+    </table>
+    <table style='padding:30px; font-size: smaller;'>
+      <tr>
+        <th style='padding:5px;'></th>
+        <th style='padding:5px;'></th>
+        <th style='padding:5px;'>Tipo</th>
+        <th style='padding:5px;'>Inicio</th>
+        <th style='padding:5px;'>Final</th>
+        <th style='padding:5px;'>Cantidad</th>
+      </tr>
+      <tr>
+        <td style="background: #4A97D4; color:white;">Tabaquismo</td>
+        <td>{{patient.smoke}}</tb>
+        <td> </td>
+        <td>{{patient.smoke_duration|date:"Y"}}</tb>
+        <td>{{patient.smoke_quit|date:"Y"}}</tb>
+        <td>{{patient.smoke_quantity}}</td>
+      </tr>
+      <tr>
+        <td style="background: #4A97D4; color:white;">Diabetes Mellitus</tb>
+        <td>{{patient.diabetes}}</tb>
+        <td>{{patient.diabetes_type}}</tb>
+        <td>{{patient.diebetes_date|date:"Y"}}</tb>
+        <td></td>
+        <td></td>
+      <tr>
+        <td style="background: #4A97D4; color:white;">Hipertensión Arterial</td>
+        <td>{{patient.hyper}}</td>
+        <td>{{patient.hyper_type}}</td>
+        <td>{{patient.hyper_date|date:"Y"}}</td>
+        <td></td>
+        <td></td>
+      </tr>
+          <tr>
+        <td style="background: #4A97D4; color:white;">Dislipidemia</td>
+        <td>{{patient.dislipidemia}}</td>
+        <td>{{patient.dislipidemia_type}}</td>
+        <td>{{patient.dislipidemia_date|date:"Y"}}</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td style="background: #4A97D4; color:white;">IRC</td>
+        <td>{{patient.irc}}</td>
+        <td>{{patient.irc_type}}</td>
+        <td>{{patient.irc_date|date:"Y"}}</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td style="background: #4A97D4; color:white;">IAM</td>
+        <td>{{patient.iam}}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td style="background: #4A97D4; color:white;">ACV</td>
+        <td>{{patient.acv}}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td style="background: #4A97D4; color:white;">Revasc</td>
+        <td>{{patient.revasc}}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr> 
+        <td style="background: #4A97D4; color:white;">ENFVP</td>
+        <td>{{patient.enfvp}}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td style="background: #4A97D4; color:white;">ACV AIT</td>
+        <td>{{patient.acv_ait}}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td style="background: #4A97D4; color:white;">FECVT</td>
+        <td>{{patient.fecvt}}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+
+  </div>
+  <div class='box-65' style="overflow:scroll; height:500px;">
+  <label style='padding-left:5%;'>Detalles médicos: </label> <br>{{patient.medical_details}}<br>
+
+    {% if studies_list %}
+      <table style="width:100%; top: 0;">
+        <tr>
+          <th>Fecha</th>
+          <th>Comentarios</th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+
+    {% for study in studies_list %}
+      <tr>
+        <td style='width: 120px;'>
+          <a href="{% url 'study_view' company.id patient.id study.id %}"> {{study.date}}</a>
+        </td>
+        <td>{{study.comments}}</td>
+        <td style="width: 60px;"><div class="hover-edit"><a href="{% url 'study_edit' company.id patient.id study.id%}"> Editar</a></div></td>
+        <td style="width: 60px;"><div class="hover-edit"><a href="{% url 'export_pdf' company.id patient.id study.id%}">Imprimir</a></div></td>
+        <td style="width: 60px;"><div class="hover-delete"><a href="{% url 'study_delete' company.id patient.id study.id%}">Eliminar</a></div></td>
+      </tr>
+    {% endfor %}
+      </table>
+    {% else %}
+      <p style="display:center; padding-left: 50%;  ">No hay estudios.</p>
+    {% endif %}
+  </div>
+  </body>
+</div>
+<script>
+function unhide(id) {
+    var x = document.getElementById(id);
+    if (x.style.display === "none") {
+        x.style.display = "inline";
+        x.style.width = "100%"
+    } else {
+        x.style.display = "none";
+    }
+}
+</script>
+{% endblock %}
+
+
+

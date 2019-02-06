@@ -1,85 +1,86 @@
-{% extends 'navbar.html' %}
+{% extends 'navbar_patient.html' %}
 {% block content %}
 {% load static %}
-<form method='POST' action='{% url 'pacient_edit' id%}'>
+<form method='POST' action='{% url 'patient_edit' company.id patient.id%}'>
   {% csrf_token %}
   
   <div class="container-list">
-    <div> <h6>Editar Paciente: {{name}} {{name_second}} {{name_last}}</h6></div>
+    <div> <h6>Editar Patiente: {{patient.name}} {{patient.name_second}} {{patient.name_last}}</h6></div>
     <div>
     <br>
       <label for='inputName' >Nombre Completo:</label>
-      <input id='inputName' name='name' type="text" placeholder="{{name}}"required='' >
+      <input id='inputName' name='name' type="text" value="{{patient.name}}"required='' >
       
-      <input id='inputSecondName' name='name_second'type="text" placeholder="{{name_second}}">
+      <input id='inputSecondName' name='name_second'type="text" value="{{patient.name_second}}">
       
-      <input id='inputLastName' name='name_last' type="text" placeholder="{{name_last}}" required=''>
+      <input id='inputLastName' name='name_last' type="text" value="{{patient.name_last}}" required=''>
 
-      <input style='width: 150px;' name='id' id='id_input' type="int" placeholder="{{id}}" required=''>
+      <input style='width: 150px;' name='id' id='id_input' type="int" value="{{patient.id}}" required=''>
     </div>
     <div>
       
       <select id='id_sex' name="sex" required=''>
-        <option value='{{sex}}' selected=''> {{sex}} </option>
+        <option value='{{patient.sex}}' selected=''> {{patient.sex}} </option>
         <option value='M'> Masculino </option>
         <option value='F'> Femenino </option>
       </select>
 
-      <input id='inputAddress' name='address' type="text" placeholder="{{address}}" required=''>
+      <input id='inputAddress' name='address' type="text" value="{{patient.address}}" required=''>
 
-      <input id='inputPhone' name='phone' type="tel" placeholder="Telefono" required=''>
+      <input id='inputPhone' name='phone' type="tel" value="{{patient.phone}}" required=''>
       
       <label for='inputName' >Fecha de Nacimiento:</label>
-      <input id='inputBirthDate' name='date_of_birth' type="date" placeholder="{{date_of_birth}}" required=''>
+      <input id='inputBirthDate' name='date_of_birth' type="text" value="{{patient.date_of_birth|date:"Y-m-d"}}" required=''
+      style='width:150px'>
     </div>
    
     <div style='width:300px'>
       <label for='inputSmoke' style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding: 6px;' >Fumador:</label>
-      {%if smoke%}
+      {%if patient.smoke%}
         <input id='inputSmoke' name='smoke' type="checkbox" checked>
       {% else %}
         <input id='inputSmoke' name='smoke' type="checkbox">
       {%endif%}
     <!-- hacer que se despliege -->
 
-      <input style='width: 150px' id='inputSmokeQuantity' type="int" placeholder="{{smoke_quantity}}" name='smoke_quantity'>
+      <input style='width: 150px' id='inputSmokeQuantity' type="int" value="{{patient.smoke_quantity}}" name='smoke_quantity'>
 
       <label for='inputSmokeDuration' style='margin: 5px;' >Duracion:</label>
-      <input id='inputSmokeDuration' type="date" name='smoke_duration' placeholder='{{smoke_duration}}'>
+      <input id='inputSmokeDuration' type="date" name='smoke_duration' value='{{patient.smoke_duration}}'>
 
       <label for='inputSmokeQuit' style='margin: 5px;'> Finalizacion: </label>
-      <input id='inputSmokeQuit' type="date" placeholder="{{smoke_quit}}" name='smoke_quit'>
+      <input id='inputSmokeQuit' type="date" value="{{patient.smoke_quit}}" name='smoke_quit'>
     </div>
     <!--  -->
 
     <div style='width:300px'>
-      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputHyper' >HiperTenso:</label>
-      {%if hyper%}
+      <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputHyper'>HiperTenso:</label>
+      {%if patient.hyper%}
       <input id='inputHyper' type="checkbox" name='hyper' checked>
       {%else%}
       <input id='inputHyper' type="checkbox" name='hyper'>
       {%endif%}
     <!-- Despliege -->
       <select id='inputHyerType' name="hyper_type">
-        <option value='' selected=''> {{hyper_type}} </option>
+        <option value='' selected=''> {{patient.hyper_type}} </option>
         <option value='Primaria'> Primaria  </option>
         <option value='Secundaria'> Secundaria </option>
       </select>
       <label for='inputHyperDate' style='margin: 5px;' >Fecha de Inicio:</label>
-      <input id='inputHyperDate' type="date" name='hyper_date' placeholder='{{hyper_date}}'>
+      <input id='inputHyperDate' type="date" name='hyper_date' value='{{patient.hyper_date}}'>
     <!--  -->
     </div>
 
     <div style='width:300px'>
       <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputDislipidemia' >Dislipidemia:</label>
-      {% if dislipidemia %}
+      {% if patient.dislipidemia %}
         <input id='inputDislipidemia' name='displidemia' type="checkbox" checked>
       {% else %}
         <input id='inputDislipidemia' name='displidemia' type="checkbox">
       {% endif %}
     <!-- Despliege -->
       <select id='inputDislipidemiaType' name="dislipidemia_type">
-        <option value='' selected=''> {{dislipidemia_type}} </option>
+        <option value='' selected=''> {{patient.dislipidemia_type}} </option>
         <option value='I'> I  </option>
         <option value='IIa'> IIa </option>
         <option value='IIb'> IIb </option>
@@ -89,21 +90,21 @@
       </select>
 
       <label for='inputDislipidemiaDate' style='margin: 5px;' >Fecha de Inicio:</label>
-      <input id='inputDislipidemiaDate' name='dispilidemia_date' type="date" placeholder='{{paciend.dispilidemia_date}}'>
+      <input id='inputDislipidemiaDate' name='dispilidemia_date' type="date" value='{{pacient.dispilidemia_date}}'>
     <!--  -->
     </div>
     
     <div style='width:300px'>
       <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputIRC' >IRC:</label>
-      {% if irc %}
-        <input id='inputIRC' name='irc' type="checkbox" placeholder='{{irc}}'>
+      {% if patient.irc %}
+        <input id='inputIRC' name='irc' type="checkbox" value='{{patient.irc}}'>
       {% else %}
         <input id='inputIRC' name='irc' type="checkbox">
       {% endif %}
 
     <!-- Despliege -->
       <select id='inputIRCType' name="irc_type">
-        <option value='' selected=''> {{irc_type}} </option>
+        <option value='' selected=''> {{patient.irc_type}} </option>
         <option value='G1'> G1  </option>
         <option value='G2'> G2 </option>
         <option value='G3a'> G3a </option>
@@ -113,13 +114,13 @@
       </select>
       <div>
       <label for='inputIRCDate' style='margin: 5px;' >Fecha de Inicio:</label>
-      <input id='inputIRCDate' type="date" name='irc_date' placeholder='{{irc_date}}'>
+      <input id='inputIRCDate' type="date" name='irc_date' value='{{patient.irc_date}}'>
       </div>
       </div>
     
     <div style='width:290px;'>
       <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputDiabetes' >Diabetes:</label>
-      {%if diabetes %}
+      {%if patient.diabetes %}
         <input id='inputDiabetes' type="checkbox" name='diabetes' checked>
       {% else %}
         <input id='inputDiabetes' type="checkbox" name='diabetes'>
@@ -127,7 +128,7 @@
 
     <!-- Desplegar -->
       <select id='diabetesType' name="diabetes_type">
-        <option value='' selected=''> {{diabetes_type}} </option>
+        <option value='' selected=''> {{patient.diabetes_type}} </option>
         <option value='1'> 1  </option>
         <option value='2'> 2 </option>
         <option value='3'> 3 </option>
@@ -136,20 +137,20 @@
       </select>
 
       <label for='inputDiabetesDate' style='margin: 5px;' >Fecha de Inicio:</label>
-      <input id='inputDiabetesDate' type="date" name='diabetes_date' placeholder='{{diabetes_date}}'>
+      <input id='inputDiabetesDate' type="date" name='diabetes_date' value='{{patient.diabetes_date}}'>
     </div>
     <!--  -->
 
     <div style='width:300px'>
       <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputIAM'>Antecedentes IAM:</label>
-      {% if iam %}    
+      {% if patient.iam %}    
       <input id='inputIAM' type="checkbox" name='iam' checked>
       {%else%}
       <input id='inputIAM' type="checkbox" name='iam'>
       {% endif %}
 
       <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputACV'>Antecedentes ACV:</label>
-      {% if acv %}
+      {% if patient.acv %}
       <input id='inputACV' type="checkbox" name='acv' checked>
       {%else%}
       <input id='inputACV' type="checkbox" name='acv'>
@@ -158,7 +159,7 @@
     
     <div style='width:300px'>
       <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputRevasc'>Antecedentes Revasc:</label>
-      {% if revasc %}
+      {% if patient.revasc %}
       <input id='inputRevasc' type="checkbox" name='revasc'checked>
       {%else%}
       <input id='inputRevasc' type="checkbox" name='revasc'>
@@ -166,7 +167,7 @@
 
 
       <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputEnfvp'>Antecedentes Enf VP:</label>
-      {% if enfvp %}
+      {% if patient.enfvp %}
       <input id='inputEnfvp' type="checkbox" name='enfvp' checked>
       {%else%}
       <input id='inputEnfvp' type="checkbox" name='enfvp'>
@@ -175,14 +176,14 @@
     
     <div style='width:300px'>
       <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputAcv_ait'>Antecedentes ACV-AIT:</label>
-      {% if acv_ait %}
+      {% if patient.acv_ait %}
       <input id='inputAcv_ait' type="checkbox" name='acv_ait' checked>
       {%else%}
       <input id='inputAcv_ait' type="checkbox" name='acv_ait'>
       {% endif %}
 
       <label style='background: rgba(0, 0, 0, 0.05); border-radius: 5px; padding:7px' for='inputFecvt'>Antecedentes FECVT:</label>
-      {% if fecvt %}
+      {% if patient.fecvt %}
       <input id='inputFecvt' type="checkbox" name='fecvt' checked>
       {%else%}
       <input id='inputFecvt' type="checkbox" name='fecvt'>
@@ -191,7 +192,7 @@
 
     </div>
 
-    <input style='width:100%;' id='inputMedicalDetails' type="text" placeholder="Detalles medicos" name='medical_details'>
+    <input style='width:100%;' id='inputMedicalDetails' type="text" value="{{patient.medical_details}}" name='medical_details'>
     
     <div style='width:100%; text-align: center;'>
     <button type="submit" name='edit' value='True'>Save</button>
@@ -202,14 +203,3 @@
 
 
 {% endblock %}
-
-
-<!--       <input style='width:70px' id='inputDiabetesType' type="int" placeholder="Tipo">
-
-      <input style='width:120px' id='inputDiabetesCHOLLevel' type="int" placeholder="Nivel de CHOL">
-
-      <input style='width:110px' id='inputDiabetesHDLLevel' type="int" placeholder="Nivel de HDL">
-
-      <input style='width:110px' id='inputDiabetesLDLLevel' type="int" placeholder="Nivel de LDL">
-
-      <input style='width:110px' id='inputDiabetesTRILevel' type="int" placeholder="Nivel de TRI"> -->
