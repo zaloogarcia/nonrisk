@@ -96,31 +96,39 @@ function saveImage() {
     areatotal = areatotal.toString();
 
     ctx.globalAlpha = 0.5;
-    ctx.rect(500, 440, 200, 60); //right
-    ctx.rect(5, 440, 200, 60); //left
+    if (areaderecha > 0){
+        ctx.rect(500, 440, 200, 60); //right
+    }
+    if (areaizquierda > 0){
+        ctx.rect(5, 440, 200, 60); //left
+    }
     ctx.fillStyle = "white";
     ctx.fill();
     ctx.globalAlpha = 1.0;
 
     ctx.fillStyle = "black";
-    
-    ctx.fillText("Área de placa Izquierda:", 15, 465);
-    ctx.fillText( areaizquierda +'(mm²)', 65, 485);
-    ctx.fillText( '___________', 35, 487);
+    if (areaizquierda>0){
+        ctx.fillText("Área de placa Izquierda:", 15, 465);
+        ctx.fillText( areaizquierda +'(mm²)', 65, 485);
+        ctx.fillText( '___________', 35, 487);
+    }
 
-
-    ctx.fillText("Área de placa Derecha:", 510, 465);
-    ctx.fillText(areaderecha +'(mm²)', 555, 485);
-    ctx.fillText( '___________', 535, 487);
+    if(areaderecha>0){
+        ctx.fillText("Área de placa Derecha:", 510, 465);
+        ctx.fillText(areaderecha +'(mm²)', 555, 485);
+        ctx.fillText( '___________', 535, 487);
+    }
     ctx.stroke();
 
     ctx.font = "bold 18px Arial";
-    ctx.fillText("Área de placa", 470, 25);
-    ctx.fillText("total: "+ areatotal+ "(mm²)" , 470, 45);
-    ctx.stroke();
+    if(areaizquierda>0 || areaderecha>0){
+        ctx.fillText("Área de placa", 470, 25);
+        ctx.fillText("total: "+ areatotal+ "(mm²)" , 470, 45);
+        ctx.stroke();
 
-    ctx.font = "10px Arial";
-    ctx.fillText("_____________________" , 465, 47);
+        ctx.font = "10px Arial";
+        ctx.fillText("_____________________" , 465, 47);
+    }
 
 
 
