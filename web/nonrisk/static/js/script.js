@@ -1,20 +1,21 @@
 var canvas = document.getElementById('myCanvas');
 var ctx = canvas.getContext('2d');
 var imageObj = new Image();
+var layer = new Image();
 var final_image;
 
 imageObj.onload = start;
-imageObj.src = '/static/images/arterias.jpg';
+layer.onload = start;
+imageObj.src = '/static/images/arteries.png';
+layer.src = '/static/images/layer.png';
 
 function start() {
   ctx.drawImage(imageObj, 0, 0, myCanvas.width, myCanvas.height);
-  canvas.onmousemove = lines();
-
-  // document.getElementById("image_data").value = canvas.toDataURL("image/png", 1);
+  canvas.onmousemove = lines('Done');
 };
 
-function lines() {
-
+function lines(id) {
+    var x = document.getElementById(id);
     //Initialize mouse coordinates to 0,0
     var mouse = { x: 0, y: 0};
 
@@ -24,7 +25,7 @@ function lines() {
         ctx.lineWidth = lineWidthRange();
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
-        ctx.strokeStyle = 'red';
+        ctx.strokeStyle = 'yellow';
         ctx.stroke();
     };
 
@@ -39,6 +40,8 @@ function lines() {
         ctx.beginPath();
         ctx.moveTo(mouse.x, mouse.y);
         canvas.addEventListener('mousemove', paint, false);
+        //uncheck 'Done'
+        x.checked = false;
     };
 
     //When mouse lifts up, line stops painting
@@ -67,13 +70,16 @@ function lineWidthRange() {
 };
 
 //Clear canvas
-function erase() {
+function erase(id) {
+    var x = document.getElementById(id);
+    x.checked = false;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(imageObj, 0, 0, myCanvas.width, myCanvas.height);
 
 };
 
 function saveImage() {
+    ctx.drawImage(layer, 0, 0, myCanvas.width, myCanvas.height);
     ctx.closePath();
     ctx.beginPath();
 
@@ -88,38 +94,33 @@ function saveImage() {
     areaderecha = areaderecha.toString();
     areaizquierda = areaizquierda.toString();
     areatotal = areatotal.toString();
-    
-    ctx.rect(452, 359, 130, 98); //right
-    ctx.rect(43, 361, 130, 100); //left
+
+    ctx.globalAlpha = 0.5;
+    ctx.rect(500, 440, 200, 60); //right
+    ctx.rect(5, 440, 200, 60); //left
     ctx.fillStyle = "white";
     ctx.fill();
+    ctx.globalAlpha = 1.0;
 
     ctx.fillStyle = "black";
     
-    ctx.rect(43, 361, 130, 100); //left
-    ctx.stroke();
-    ctx.rect(452, 359, 130, 98); //right
-    ctx.stroke();
-    
-    ctx.fillText("Área de placa", 50, 383);
-    ctx.fillText("Izquierda: ", 50, 405);
-    ctx.fillText( areaizquierda +'(mm²)', 77, 430);
-    ctx.fillText( '___________', 57, 432);
+    ctx.fillText("Área de placa Izquierda:", 15, 465);
+    ctx.fillText( areaizquierda +'(mm²)', 65, 485);
+    ctx.fillText( '___________', 35, 487);
 
 
-    ctx.fillText("Área de placa", 460, 380);
-    ctx.fillText("Derecha:", 460, 400);
-    ctx.fillText(areaderecha +'(mm²)', 487, 425);
-    ctx.fillText( '___________', 470, 426);
+    ctx.fillText("Área de placa Derecha:", 510, 465);
+    ctx.fillText(areaderecha +'(mm²)', 555, 485);
+    ctx.fillText( '___________', 535, 487);
     ctx.stroke();
 
     ctx.font = "bold 18px Arial";
-    ctx.fillText("Área de placa", 550, 56);
-    ctx.fillText("total: "+ areatotal+ "(mm²)" , 550, 80);
+    ctx.fillText("Área de placa", 470, 25);
+    ctx.fillText("total: "+ areatotal+ "(mm²)" , 470, 45);
     ctx.stroke();
 
     ctx.font = "10px Arial";
-    ctx.fillText("_____________________" , 554, 85);
+    ctx.fillText("_____________________" , 465, 47);
 
 
 

@@ -50,8 +50,9 @@
       <div style="margin-left:70px;">
       <canvas id="myCanvas" width="700" height="500" style="border:1.5px solid #000000;">Upgrade your browser</canvas>
 
-        <input type="range" id="myRange" name="amountRange" value="1" min="1" max="50" oninput="this.form.amountInput.value=this.value" onclick="lineWidthRange()" style='width: 8px; height: 175px;' orient='vertical'>
-        <button style='background-color:#F34021; width:55px; padding:7px; height:36px;'type="button" value="Reset" onclick="erase()">Clear</button>
+        <input type="range" id="myRange" name="amountRange" value="1" min="1" max="50" oninput="this.form.amountInput.value=this.value" onclick="lineWidthRange()" style=
+                '-webkit-appearance: slider-vertical;width: 8px; height: 175px;' orient='vertical'>
+        <button style='background-color:#F34021; width:55px; padding:7px; height:36px;'type="button" value="Reset" onclick="erase('Done')">Clear</button>
       </div>
 
       <script type="text/javascript" src="/static/js/script.js"></script>
@@ -63,7 +64,7 @@
     </div>
 
     <div style='width:100%; text-align: center;'>
-    <input name='Done' type="checkbox" required='' onclick="saveImage()">
+    <input id='Done' name='Done' type="checkbox" required='' onclick="saveImage()">
     <button type="submit">Guardar</button>
     </div>
   </div>
