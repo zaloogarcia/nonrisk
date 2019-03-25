@@ -15,6 +15,7 @@ function start() {
 };
 
 function lines(id) {
+    counter = 1;
     var x = document.getElementById(id);
     //Initialize mouse coordinates to 0,0
     var mouse = { x: 0, y: 0};
@@ -23,6 +24,13 @@ function lines(id) {
     paint = function() {
         ctx.lineTo(mouse.x, mouse.y);
         ctx.lineWidth = lineWidthRange();
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#ff5143';
+        ctx.stroke();
+
+        ctx.lineTo(mouse.x, mouse.y);
+        ctx.lineWidth = lineWidthRange()-4;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
         ctx.strokeStyle = 'yellow';

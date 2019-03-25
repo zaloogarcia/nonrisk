@@ -1,12 +1,12 @@
-import re, math, base64, tkinter, matplotlib
+import re, math, base64, tkinter, matplotlib, io
 from io import *
 from PIL import Image
 matplotlib.use('Agg')
 from matplotlib import pylab
 from pylab import *
 from django.http import *
-from nonrisk.forms import *
-from nonrisk.models import *
+from .models import *
+from .forms import *
 import xhtml2pdf.pisa as pisa
 from datetime import date, datetime
 from django.template import loader
@@ -416,6 +416,7 @@ def study_add(request, company_id, patient_id):
 
             comments= None if request.POST.get('comments') == '' else request.POST.get('comments'),
         )
+        print(filename)
         new_study.photo.save(filename, ContentFile(tempfile_io.getvalue()) , save = True) #save the photo
         new_study.graphic.save(figurename, ContentFile(buffer.getvalue()) , save = True) #save the photo
 
